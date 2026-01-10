@@ -11,8 +11,21 @@ class Project extends Model
         'slug',
         'name',
         'description',
+        'type',
+        'area_sqm',
+        'location',
+        'bedrooms',
+        'bathrooms',
+        'is_featured',
         'price_starts_at',
         'image_url',
+    ];
+
+    protected $casts = [
+        'area_sqm' => 'integer',
+        'bedrooms' => 'integer',
+        'bathrooms' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     /**
