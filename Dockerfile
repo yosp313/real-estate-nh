@@ -3,27 +3,17 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Stage 1: Build frontend assets
+# Stage 1: Base PHP image with extensions
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS frontend-builder
+FROM php:8.2-cli-alpine AS php-base
 
-WORKDIR /app
-
-# Copy package files
-COPY package.json package-lock.json* ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy source files needed for build
-COPY resources ./resources
-COPY tsconfig.json vite.config.ts tailwind.config.js* postcss.config.js* eslint.config.js ./
-
-# Build frontend assets
-RUN npm run build
+# Install PHP extensions needed for Laravel
+RUN apk add --no-cache \
+    sqlite-dev \
+    && docker-php-ext-install pdo_sqlite
 
 # -----------------------------------------------------------------------------
-# Stage 2: Install PHP dependencies
+# Stage 2: Install Composer dependencies
 # -----------------------------------------------------------------------------
 FROM composer:2 AS composer-builder
 
@@ -45,6 +35,29 @@ COPY . .
 
 # Generate optimized autoloader
 RUN composer dump-autoload --optimize --no-dev
+
+# -----------------------------------------------------------------------------
+# Stage 3: Build frontend assets (needs PHP for wayfinder plugin)
+# -----------------------------------------------------------------------------
+FROM php:8.2-cli-alpine AS frontend-builder
+
+# Install Node.js and PHP extensions
+RUN apk add --no-cache \
+    nodejs \
+    npm \
+    sqlite-dev \
+    && docker-php-ext-install pdo_sqlite
+
+WORKDIR /app
+
+# Copy composer dependencies and application from previous stage
+COPY --from=composer-builder /app /app
+
+# Install npm dependencies
+RUN npm ci
+
+# Build frontend assets (wayfinder plugin will now find PHP)
+RUN npm run build
 
 # -----------------------------------------------------------------------------
 # Stage 3: Production image
