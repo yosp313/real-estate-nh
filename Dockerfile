@@ -60,7 +60,7 @@ RUN npm ci
 RUN npm run build
 
 # -----------------------------------------------------------------------------
-# Stage 3: Production image
+# Stage 4: Production image
 # -----------------------------------------------------------------------------
 FROM php:8.2-fpm-alpine AS production
 
