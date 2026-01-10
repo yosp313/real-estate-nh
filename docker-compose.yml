@@ -1,0 +1,109 @@
+# =============================================================================
+# Docker Compose for Al-Nader Real Estate Application
+# =============================================================================
+# Usage:
+#   Development: docker compose up -d
+#   Production:  docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Main Application (Laravel + Nginx + PHP-FPM)
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alnader-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      - APP_NAME=${APP_NAME:-Al-Nader}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-http://localhost:8080}
+      - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
+      - DB_CONNECTION=${DB_CONNECTION:-sqlite}
+      - DB_DATABASE=${DB_DATABASE:-/var/www/html/database/database.sqlite}
+      - SESSION_DRIVER=${SESSION_DRIVER:-file}
+      - CACHE_DRIVER=${CACHE_DRIVER:-file}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
+    volumes:
+      # Persist SQLite database
+      - sqlite_data:/var/www/html/database
+      # Persist storage (uploads, logs)
+      - storage_data:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - alnader-network
+
+  # ---------------------------------------------------------------------------
+  # Optional: MySQL Database (uncomment to use instead of SQLite)
+  # ---------------------------------------------------------------------------
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: alnader-mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+  #     MYSQL_DATABASE: ${DB_DATABASE:-alnader}
+  #     MYSQL_USER: ${DB_USERNAME:-alnader}
+  #     MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "${DB_PORT:-3306}:3306"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - alnader-network
+
+  # ---------------------------------------------------------------------------
+  # Optional: Redis for caching/sessions (uncomment to use)
+  # ---------------------------------------------------------------------------
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: alnader-redis
+  #   restart: unless-stopped
+  #   command: redis-server --appendonly yes
+  #   volumes:
+  #     - redis_data:/data
+  #   ports:
+  #     - "${REDIS_PORT:-6379}:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - alnader-network
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  sqlite_data:
+    driver: local
+  storage_data:
+    driver: local
+  # mysql_data:
+  #   driver: local
+  # redis_data:
+  #   driver: local
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  alnader-network:
+    driver: bridge

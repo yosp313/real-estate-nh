@@ -1,0 +1,70 @@
+# =============================================================================
+# Docker Ignore File
+# Excludes unnecessary files from Docker build context
+# =============================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE and editors
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Testing
+tests
+phpunit.xml
+.phpunit.result.cache
+coverage
+
+# Development files
+.env
+.env.local
+.env.*.local
+.env.backup
+
+# Documentation
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+docs
+
+# Build artifacts (we build in Docker)
+public/build
+public/hot
+
+# Storage (mounted as volume)
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+!storage/app/.gitignore
+!storage/framework/.gitignore
+!storage/logs/.gitignore
+
+# Database (mounted as volume)
+database/*.sqlite
+
+# Docker files (not needed in context after copy)
+docker-compose*.yml
+Dockerfile*
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+*.cache
+
+# Laravel specific
+bootstrap/cache/*.php
+vendor
