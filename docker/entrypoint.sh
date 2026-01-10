@@ -8,6 +8,48 @@ set -e
 echo "🚀 Starting Al-Nader Real Estate Application..."
 
 # -----------------------------------------------------------------------------
+# Create .env file if it doesn't exist
+# -----------------------------------------------------------------------------
+if [ ! -f /var/www/html/.env ]; then
+    echo "📄 Creating .env file..."
+    cat > /var/www/html/.env << 'ENVFILE'
+APP_NAME="النادر للعقارات"
+APP_ENV=production
+APP_DEBUG=false
+APP_TIMEZONE=UTC
+APP_URL=http://localhost
+
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+
+APP_MAINTENANCE_DRIVER=file
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stderr
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=error
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/var/www/html/database/database.sqlite
+
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+FILESYSTEM_DISK=local
+
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+ENVFILE
+    chown www-data:www-data /var/www/html/.env
+fi
+
+# -----------------------------------------------------------------------------
 # Create log directories
 # -----------------------------------------------------------------------------
 mkdir -p /var/log/php /var/log/nginx
