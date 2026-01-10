@@ -17,7 +17,7 @@ services:
     container_name: alnader-app
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "0.0.0.0:${APP_PORT:-8080}:80"
     environment:
       - APP_NAME=${APP_NAME:-Al-Nader}
       - APP_ENV=${APP_ENV:-production}
