@@ -3,17 +3,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Stage 1: Base PHP image with extensions
-# -----------------------------------------------------------------------------
-FROM php:8.2-cli-alpine AS php-base
-
-# Install PHP extensions needed for Laravel
-RUN apk add --no-cache \
-    sqlite-dev \
-    && docker-php-ext-install pdo_sqlite
-
-# -----------------------------------------------------------------------------
-# Stage 2: Install Composer dependencies
+# Stage 1: Install Composer dependencies
 # -----------------------------------------------------------------------------
 FROM composer:2 AS composer-builder
 
@@ -37,30 +27,28 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev
 
 # -----------------------------------------------------------------------------
-# Stage 3: Build frontend assets (needs PHP for wayfinder plugin)
+# Stage 2: Build frontend assets
 # -----------------------------------------------------------------------------
-FROM php:8.2-cli-alpine AS frontend-builder
-
-# Install Node.js and PHP extensions
-RUN apk add --no-cache \
-    nodejs \
-    npm \
-    sqlite-dev \
-    && docker-php-ext-install pdo_sqlite
+FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app
 
-# Copy composer dependencies and application from previous stage
-COPY --from=composer-builder /app /app
-
-# Install npm dependencies
+# Copy package files and install dependencies
+COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Build frontend assets (wayfinder plugin will now find PHP)
+# Copy application source needed for build
+COPY --from=composer-builder /app /app
+
+# Re-install node_modules (was overwritten by COPY)
+RUN npm ci
+
+# Build frontend assets with wayfinder disabled (no PHP artisan available)
+ENV DOCKER_BUILD=true
 RUN npm run build
 
 # -----------------------------------------------------------------------------
-# Stage 4: Production image
+# Stage 3: Production image
 # -----------------------------------------------------------------------------
 FROM php:8.2-fpm-alpine AS production
 
