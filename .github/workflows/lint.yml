@@ -33,10 +33,13 @@ jobs:
         run: vendor/bin/pint
 
       - name: Format Frontend
-        run: npm run format
+        run: npm run format:check
 
       - name: Lint Frontend
         run: npm run lint
+
+      - name: Type Check Frontend
+        run: npm run types
 
       # - name: Commit Changes
       #   uses: stefanzweifel/git-auto-commit-action@v5

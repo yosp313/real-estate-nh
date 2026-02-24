@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
 {
@@ -13,30 +15,38 @@ class ReservationController extends Controller
      */
     public function store(Request $request, Project $project): RedirectResponse
     {
-        // 1. Validate the input
-        $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string|min:10',
-        ]);
-
-        // 2. Check for duplicates (prevent spam)
-        $exists = $project->reservations()
-                          ->where('customer_email', $validated['email'])
-                          ->exists();
-
-        if ($exists) {
-            return back()->withErrors(['email' => 'You have already registered for this project.']);
+        if (! $project->isAvailable()) {
+            return back()->withErrors(['project' => __('messages.project_unavailable')]);
         }
 
-        // 3. Create the reservation
-        $project->reservations()->create([
-            'customer_name'  => $validated['name'],
-            'customer_email' => $validated['email'],
-            'customer_phone' => $validated['phone'],
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('reservations', 'customer_email')->where(fn ($query) => $query->where('project_id', $project->id)),
+            ],
+            'phone' => 'required|string|min:10|max:50',
+        ], [
+            'email.unique' => __('messages.already_registered'),
         ]);
 
-        // 4. Redirect back with success message
-        return back()->with('success', 'Registration successful! We will contact you.');
+        try {
+            $project->reservations()->create([
+                'customer_name' => $validated['name'],
+                'customer_email' => $validated['email'],
+                'customer_phone' => $validated['phone'],
+                'status' => 'pending',
+            ]);
+        } catch (QueryException $exception) {
+            if ((string) $exception->getCode() === '23000') {
+                return back()->withErrors(['email' => __('messages.already_registered')]);
+            }
+
+            throw $exception;
+        }
+
+        return back()->with('success', __('messages.registration_success'));
     }
 }

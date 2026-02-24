@@ -18,11 +18,11 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         $locale = Session::get('locale', config('app.locale'));
-        
+
         if (in_array($locale, config('app.available_locales', ['en']))) {
             App::setLocale($locale);
         }
-        
+
         return $next($request);
     }
 }

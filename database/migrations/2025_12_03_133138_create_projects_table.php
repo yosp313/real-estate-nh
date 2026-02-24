@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('price_starts_at');
             $table->string('image_url');
             $table->timestamps();
-            
+
             $table->index('slug');
         });
     }

@@ -25,14 +25,34 @@ use UnitEnum;
 class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
+
     protected static string|UnitEnum|null $navigationGroup = 'Communications';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.contacts');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('messages.contact_record');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.contacts');
+    }
 
     public static function getNavigationBadge(): ?string
     {
         $count = static::getModel()::where('is_read', false)->count();
+
         return $count > 0 ? (string) $count : null;
     }
 

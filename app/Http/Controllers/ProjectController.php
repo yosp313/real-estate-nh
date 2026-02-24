@@ -19,6 +19,7 @@ class ProjectController extends Controller
         'duplex',
         'penthouse',
         'studio',
+        'commercial',
     ];
 
     /**
@@ -26,35 +27,45 @@ class ProjectController extends Controller
      */
     public function index(Request $request): Response
     {
+        $type = $request->string('type')->toString();
+        $type = in_array($type, $this->propertyTypes, true) ? $type : null;
+
+        $minAreaRaw = $request->query('min_area');
+        $minArea = is_numeric($minAreaRaw) ? (int) $minAreaRaw : null;
+        $minArea = $minArea !== null && $minArea >= 0 && $minArea <= 100000 ? $minArea : null;
+
+        $projectSlug = $request->string('project')->toString();
+        $projectSlug = $projectSlug !== '' && Project::where('slug', $projectSlug)->exists() ? $projectSlug : null;
+
         $query = Project::query();
 
         // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        if ($type !== null) {
+            $query->where('type', $type);
         }
 
         // Filter by minimum area
-        if ($request->filled('min_area')) {
-            $query->where('area_sqm', '>=', (int) $request->min_area);
+        if ($minArea !== null) {
+            $query->where('area_sqm', '>=', $minArea);
         }
 
         // Filter by specific project slug
-        if ($request->filled('project')) {
-            $query->where('slug', $request->project);
+        if ($projectSlug !== null) {
+            $query->where('slug', $projectSlug);
         }
 
         $projects = $query->get([
-            'id', 
-            'slug', 
-            'name', 
+            'id',
+            'slug',
+            'name',
             'type',
             'area_sqm',
             'location',
             'bedrooms',
             'bathrooms',
             'is_featured',
-            'price_starts_at', 
-            'image_url'
+            'price_starts_at',
+            'image_url',
         ]);
 
         // Get all projects for the filter dropdown (unfiltered)
@@ -69,9 +80,9 @@ class ProjectController extends Controller
             'propertyTypes' => $this->propertyTypes,
             'existingTypes' => $existingTypes,
             'filters' => [
-                'type' => $request->type,
-                'min_area' => $request->min_area,
-                'project' => $request->project,
+                'type' => $type,
+                'min_area' => $minArea !== null ? (string) $minArea : null,
+                'project' => $projectSlug,
             ],
         ]);
     }

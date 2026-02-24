@@ -17,9 +17,10 @@ class ViewContact extends ViewRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        if (!$this->record->is_read) {
+        if (! $this->record->is_read) {
             $this->record->update(['is_read' => true]);
         }
+
         return $data;
     }
 }

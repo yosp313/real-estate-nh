@@ -13,10 +13,14 @@ Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('lo
 Route::get('/', [ProjectController::class, 'index'])->name('home');
 
 // Contact Form Submission
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('contact.store');
 
 // The Project Details Page
 Route::get('/project/{project:slug}', [ProjectController::class, 'show'])->name('project.show');
 
 // The "Action" Endpoint (Lead Capture)
-Route::post('/project/{project:slug}/reserve', [ReservationController::class, 'store'])->name('project.reserve');
+Route::post('/project/{project:slug}/reserve', [ReservationController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('project.reserve');

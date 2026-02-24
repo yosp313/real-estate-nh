@@ -35,13 +35,13 @@ interface SharedProps {
     translations: Record<string, string>;
     availableLocales: string[];
     localeNames: Record<string, string>;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export default function Show({ project, relatedProjects }: Props) {
     const { locale, translations: t, availableLocales, localeNames } = usePage<SharedProps>().props;
     const isRTL = locale === 'ar';
-    const { data, setData, post, processing, errors, wasSuccessful, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         phone: '',
@@ -56,6 +56,17 @@ export default function Show({ project, relatedProjects }: Props) {
             });
         }
     }, [errors.email]);
+
+    useEffect(() => {
+        const projectError = (errors as Record<string, string>).project;
+
+        if (projectError) {
+            toast.error(projectError, {
+                duration: 4000,
+                position: 'top-center',
+            });
+        }
+    }, [errors]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -75,7 +86,7 @@ export default function Show({ project, relatedProjects }: Props) {
     return (
         <>
             <Head title={`${project.name} | ${t.brand_name} ${t.brand_tagline}`} />
-            <Toaster 
+            <Toaster
                 toastOptions={{
                     style: {
                         background: '#1a1a1a',
@@ -101,15 +112,13 @@ export default function Show({ project, relatedProjects }: Props) {
             <div className={`min-h-screen bg-[#0d0d0d] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
                 {/* Language Switcher */}
                 <div className="fixed top-6 right-6 z-50">
-                    <div className="bg-[#1a1a1a] border border-[#c9a050]/30 rounded overflow-hidden">
+                    <div className="overflow-hidden rounded border border-[#c9a050]/30 bg-[#1a1a1a]">
                         {availableLocales.map((loc) => (
                             <Link
                                 key={loc}
                                 href={`/locale/${loc}`}
                                 className={`block px-4 py-2 text-sm transition-colors ${
-                                    locale === loc
-                                        ? 'bg-[#c9a050] text-[#1a1a1a] font-semibold'
-                                        : 'text-gray-300 hover:bg-[#2d2d2d]'
+                                    locale === loc ? 'bg-[#c9a050] font-semibold text-[#1a1a1a]' : 'text-gray-300 hover:bg-[#2d2d2d]'
                                 }`}
                             >
                                 {localeNames[loc]}
@@ -119,19 +128,13 @@ export default function Show({ project, relatedProjects }: Props) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="bg-[#1a1a1a] border-b border-[#c9a050]/20">
+                <nav className="border-b border-[#c9a050]/20 bg-[#1a1a1a]">
                     <div className="mx-auto max-w-6xl px-6">
-                        <div className="flex items-center justify-between h-16">
-                            <Link
-                                href="/"
-                                className="text-2xl font-bold text-[#c9a050] hover:text-[#d4a84a] transition-colors"
-                            >
+                        <div className="flex h-16 items-center justify-between">
+                            <Link href="/" className="text-2xl font-bold text-[#c9a050] transition-colors hover:text-[#d4a84a]">
                                 {t.brand_name}
                             </Link>
-                            <Link
-                                href="/"
-                                className="text-sm text-gray-400 hover:text-[#c9a050] transition-colors"
-                            >
+                            <Link href="/" className="text-sm text-gray-400 transition-colors hover:text-[#c9a050]">
                                 {isRTL ? '→' : '←'} {t.back_to_properties.toUpperCase()}
                             </Link>
                         </div>
@@ -143,94 +146,79 @@ export default function Show({ project, relatedProjects }: Props) {
                     <div className="mx-auto max-w-6xl px-6">
                         <div className="grid gap-12 lg:grid-cols-5">
                             {/* Left Column: Project Details */}
-                            <div className="lg:col-span-3 space-y-8">
+                            <div className="space-y-8 lg:col-span-3">
                                 {/* Hero Image */}
                                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-[#1a1a1a]">
-                                    <img
-                                        src={project.image_url}
-                                        alt={project.name}
-                                        className="h-full w-full object-cover"
-                                    />
+                                    <img src={project.image_url} alt={project.name} className="h-full w-full object-cover" />
                                 </div>
 
                                 {/* Project Info */}
-                                <div className="bg-[#1a1a1a] p-8 rounded-lg border border-[#c9a050]/20">
+                                <div className="rounded-lg border border-[#c9a050]/20 bg-[#1a1a1a] p-8">
                                     <div className="mb-8">
-                                        <h1 className="text-4xl font-bold text-white mb-6">
-                                            {project.name}
-                                        </h1>
-                                        
+                                        <h1 className="mb-6 text-4xl font-bold text-white">{project.name}</h1>
+
                                         <div className="mb-6">
-                                            <p className="text-sm text-gray-400 mb-2">{t.starting_from.toUpperCase()}</p>
-                                            <p className="text-2xl font-bold text-[#c9a050]">
-                                                ${project.price_starts_at}
-                                            </p>
+                                            <p className="mb-2 text-sm text-gray-400">{t.starting_from.toUpperCase()}</p>
+                                            <p className="text-2xl font-bold text-[#c9a050]">${project.price_starts_at}</p>
                                         </div>
-                                        
+
                                         {/* Property Details Grid */}
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                                             {project.location && (
-                                                <div className="bg-[#2d2d2d] p-4 rounded">
-                                                    <p className="text-xs text-gray-400 mb-1">{t.property_location}</p>
-                                                    <p className="text-white font-medium">{project.location}</p>
+                                                <div className="rounded bg-[#2d2d2d] p-4">
+                                                    <p className="mb-1 text-xs text-gray-400">{t.property_location}</p>
+                                                    <p className="font-medium text-white">{project.location}</p>
                                                 </div>
                                             )}
                                             {project.type && (
-                                                <div className="bg-[#2d2d2d] p-4 rounded">
-                                                    <p className="text-xs text-gray-400 mb-1">{t.property_type}</p>
-                                                    <p className="text-white font-medium capitalize">{t[project.type] || project.type}</p>
+                                                <div className="rounded bg-[#2d2d2d] p-4">
+                                                    <p className="mb-1 text-xs text-gray-400">{t.property_type}</p>
+                                                    <p className="font-medium text-white capitalize">{t[project.type] || project.type}</p>
                                                 </div>
                                             )}
                                             {project.area_sqm && (
-                                                <div className="bg-[#2d2d2d] p-4 rounded">
-                                                    <p className="text-xs text-gray-400 mb-1">{t.area_size}</p>
-                                                    <p className="text-white font-medium">{project.area_sqm} {t.sqm}</p>
+                                                <div className="rounded bg-[#2d2d2d] p-4">
+                                                    <p className="mb-1 text-xs text-gray-400">{t.area_size}</p>
+                                                    <p className="font-medium text-white">
+                                                        {project.area_sqm} {t.sqm}
+                                                    </p>
                                                 </div>
                                             )}
                                             {project.bedrooms !== null && (
-                                                <div className="bg-[#2d2d2d] p-4 rounded">
-                                                    <p className="text-xs text-gray-400 mb-1">{t.bedrooms}</p>
-                                                    <p className="text-white font-medium">{project.bedrooms}</p>
+                                                <div className="rounded bg-[#2d2d2d] p-4">
+                                                    <p className="mb-1 text-xs text-gray-400">{t.bedrooms}</p>
+                                                    <p className="font-medium text-white">{project.bedrooms}</p>
                                                 </div>
                                             )}
                                             {project.bathrooms !== null && (
-                                                <div className="bg-[#2d2d2d] p-4 rounded">
-                                                    <p className="text-xs text-gray-400 mb-1">{t.bathrooms}</p>
-                                                    <p className="text-white font-medium">{project.bathrooms}</p>
+                                                <div className="rounded bg-[#2d2d2d] p-4">
+                                                    <p className="mb-1 text-xs text-gray-400">{t.bathrooms}</p>
+                                                    <p className="font-medium text-white">{project.bathrooms}</p>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-                                    
+
                                     <div className="border-t border-[#c9a050]/20 pt-8">
-                                        <h2 className="text-sm tracking-wider text-[#c9a050] mb-4 font-medium">{t.description.toUpperCase()}</h2>
-                                        <p className="whitespace-pre-line text-gray-300 leading-relaxed text-sm">
-                                            {project.description}
-                                        </p>
+                                        <h2 className="mb-4 text-sm font-medium tracking-wider text-[#c9a050]">{t.description.toUpperCase()}</h2>
+                                        <p className="text-sm leading-relaxed whitespace-pre-line text-gray-300">{project.description}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Right Column: Registration Form */}
-                            <div className="lg:col-span-2 lg:sticky lg:top-24 lg:self-start">
-                                <div className="bg-[#1a1a1a] p-8 rounded-lg border border-[#c9a050]/20">
+                            <div className="lg:sticky lg:top-24 lg:col-span-2 lg:self-start">
+                                <div className="rounded-lg border border-[#c9a050]/20 bg-[#1a1a1a] p-8">
                                     <div className="mb-8">
-                                        <h2 className="text-2xl font-bold text-white mb-3">
-                                            {t.inquire_now}
-                                        </h2>
-                                        <p className="text-sm text-gray-400">
-                                            {t.inquire_desc}
-                                        </p>
+                                        <h2 className="mb-3 text-2xl font-bold text-white">{t.inquire_now}</h2>
+                                        <p className="text-sm text-gray-400">{t.inquire_desc}</p>
                                     </div>
 
                                     {/* Form */}
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         {/* Name Field */}
                                         <div>
-                                            <label
-                                                htmlFor="name"
-                                                className="block text-xs tracking-wider text-gray-400 mb-2"
-                                            >
+                                            <label htmlFor="name" className="mb-2 block text-xs tracking-wider text-gray-400">
                                                 {t.full_name.toUpperCase()}
                                             </label>
                                             <input
@@ -238,26 +226,17 @@ export default function Show({ project, relatedProjects }: Props) {
                                                 id="name"
                                                 value={data.name}
                                                 onChange={(e) => setData('name', e.target.value)}
-                                                className={`block w-full px-4 py-3 border ${
-                                                    errors.name
-                                                        ? 'border-red-500 focus:border-red-500'
-                                                        : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                } focus:outline-none transition-colors bg-[#2d2d2d] text-white rounded`}
+                                                className={`block w-full border px-4 py-3 ${
+                                                    errors.name ? 'border-red-500 focus:border-red-500' : 'border-[#3d3d3d] focus:border-[#c9a050]'
+                                                } rounded bg-[#2d2d2d] text-white transition-colors focus:outline-none`}
                                                 placeholder={t.your_name}
                                             />
-                                            {errors.name && (
-                                                <p className="mt-2 text-xs text-red-600">
-                                                    {errors.name}
-                                                </p>
-                                            )}
+                                            {errors.name && <p className="mt-2 text-xs text-red-600">{errors.name}</p>}
                                         </div>
 
                                         {/* Email Field */}
                                         <div>
-                                            <label
-                                                htmlFor="email"
-                                                className="block text-xs tracking-wider text-gray-400 mb-2"
-                                            >
+                                            <label htmlFor="email" className="mb-2 block text-xs tracking-wider text-gray-400">
                                                 {t.email_address.toUpperCase()}
                                             </label>
                                             <input
@@ -265,26 +244,17 @@ export default function Show({ project, relatedProjects }: Props) {
                                                 id="email"
                                                 value={data.email}
                                                 onChange={(e) => setData('email', e.target.value)}
-                                                className={`block w-full px-4 py-3 border ${
-                                                    errors.email
-                                                        ? 'border-red-500 focus:border-red-500'
-                                                        : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                } focus:outline-none transition-colors bg-[#2d2d2d] text-white rounded`}
+                                                className={`block w-full border px-4 py-3 ${
+                                                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#3d3d3d] focus:border-[#c9a050]'
+                                                } rounded bg-[#2d2d2d] text-white transition-colors focus:outline-none`}
                                                 placeholder={t.your_email}
                                             />
-                                            {errors.email && (
-                                                <p className="mt-2 text-xs text-red-600">
-                                                    {errors.email}
-                                                </p>
-                                            )}
+                                            {errors.email && <p className="mt-2 text-xs text-red-600">{errors.email}</p>}
                                         </div>
 
                                         {/* Phone Field */}
                                         <div>
-                                            <label
-                                                htmlFor="phone"
-                                                className="block text-xs tracking-wider text-gray-400 mb-2"
-                                            >
+                                            <label htmlFor="phone" className="mb-2 block text-xs tracking-wider text-gray-400">
                                                 {t.phone_number.toUpperCase()}
                                             </label>
                                             <input
@@ -292,63 +262,55 @@ export default function Show({ project, relatedProjects }: Props) {
                                                 id="phone"
                                                 value={data.phone}
                                                 onChange={(e) => setData('phone', e.target.value)}
-                                                className={`block w-full px-4 py-3 border ${
-                                                    errors.phone
-                                                        ? 'border-red-500 focus:border-red-500'
-                                                        : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                } focus:outline-none transition-colors bg-[#2d2d2d] text-white rounded`}
+                                                className={`block w-full border px-4 py-3 ${
+                                                    errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#3d3d3d] focus:border-[#c9a050]'
+                                                } rounded bg-[#2d2d2d] text-white transition-colors focus:outline-none`}
                                                 placeholder={t.phone_number}
                                             />
-                                            {errors.phone && (
-                                                <p className="mt-2 text-xs text-red-600">
-                                                    {errors.phone}
-                                                </p>
-                                            )}
+                                            {errors.phone && <p className="mt-2 text-xs text-red-600">{errors.phone}</p>}
                                         </div>
 
                                         {/* Submit Button */}
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="w-full bg-[#c9a050] hover:bg-[#b8923a] text-[#1a1a1a] font-semibold py-3 px-6 rounded transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-8 tracking-wider text-sm"
+                                            className="mt-8 w-full rounded bg-[#c9a050] px-6 py-3 text-sm font-semibold tracking-wider text-[#1a1a1a] transition-colors duration-200 hover:bg-[#b8923a] disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             {processing ? t.sending.toUpperCase() + '...' : t.submit_inquiry.toUpperCase()}
                                         </button>
                                     </form>
 
                                     {/* Privacy Note */}
-                                    <div className="mt-8 pt-6 border-t border-[#c9a050]/20">
-                                        <p className="text-xs text-gray-500 leading-relaxed">
-                                            {t.privacy_note}
-                                        </p>
+                                    <div className="mt-8 border-t border-[#c9a050]/20 pt-6">
+                                        <p className="text-xs leading-relaxed text-gray-500">{t.privacy_note}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Related Projects */}
                         {relatedProjects && relatedProjects.length > 0 && (
                             <div className="mt-16">
-                                <h2 className="text-2xl font-bold text-white mb-8">{t.related_properties}</h2>
-                                <div className="grid md:grid-cols-3 gap-6">
+                                <h2 className="mb-8 text-2xl font-bold text-white">{t.related_properties}</h2>
+                                <div className="grid gap-6 md:grid-cols-3">
                                     {relatedProjects.map((related) => (
                                         <Link
                                             key={related.id}
                                             href={`/project/${related.slug}`}
-                                            className="group bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#c9a050]/20 hover:border-[#c9a050]/50 transition-all"
+                                            className="group overflow-hidden rounded-lg border border-[#c9a050]/20 bg-[#1a1a1a] transition-all hover:border-[#c9a050]/50"
                                         >
                                             <div className="relative aspect-[4/3] overflow-hidden">
                                                 <img
                                                     src={related.image_url}
                                                     alt={related.name}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                 />
                                             </div>
                                             <div className="p-4">
-                                                <h3 className="text-white font-medium mb-1 group-hover:text-[#c9a050] transition-colors">
+                                                <h3 className="mb-1 font-medium text-white transition-colors group-hover:text-[#c9a050]">
                                                     {related.name}
                                                 </h3>
-                                                <p className="text-[#c9a050] text-sm">
+                                                <p className="text-sm text-[#c9a050]">
                                                     {t.from} ${related.price_starts_at}
                                                 </p>
                                             </div>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('customer_email');
             $table->string('customer_phone');
             $table->timestamps();
-            
+
             // Prevent duplicate submissions for the same project
             $table->unique(['project_id', 'customer_email']);
         });

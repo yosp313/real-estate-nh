@@ -1,5 +1,5 @@
-import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
-import { useState, FormEventHandler } from 'react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { FormEventHandler, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 interface Project {
@@ -41,14 +41,15 @@ interface SharedProps {
 }
 
 export default function Index({ projects, allProjects, propertyTypes, filters }: Props) {
-    const { locale, translations: t, availableLocales, localeNames, flash } = usePage<SharedProps>().props;
+    const { locale, translations: t, availableLocales, localeNames } = usePage<SharedProps>().props;
     const isRTL = locale === 'ar';
-    
+
     // Search filters
+    const initialArea = Number(filters.min_area ?? '50');
     const [selectedProject, setSelectedProject] = useState(filters.project || '');
     const [selectedType, setSelectedType] = useState(filters.type || '');
-    const [areaRange, setAreaRange] = useState(parseInt(filters.min_area || '50'));
-    
+    const [areaRange, setAreaRange] = useState(Number.isFinite(initialArea) && initialArea >= 50 ? initialArea : 50);
+
     // Contact form
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -58,14 +59,18 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
     });
 
     const handleSearch = () => {
-        router.get('/', {
-            project: selectedProject || undefined,
-            type: selectedType || undefined,
-            min_area: areaRange > 50 ? areaRange : undefined,
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        router.get(
+            '/',
+            {
+                project: selectedProject || undefined,
+                type: selectedType || undefined,
+                min_area: areaRange > 50 ? areaRange : undefined,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     const handleContactSubmit: FormEventHandler = (e) => {
@@ -84,12 +89,12 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
     };
 
     // Get featured projects
-    const featuredProjects = projects.filter(p => p.is_featured);
+    const featuredProjects = projects.filter((p) => p.is_featured);
 
     return (
         <>
             <Head title={t.page_title} />
-            <Toaster 
+            <Toaster
                 toastOptions={{
                     style: {
                         background: '#1a1a1a',
@@ -104,43 +109,39 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                     },
                 }}
             />
-            
+
             <div className={`min-h-screen bg-[#0d0d0d] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
                 {/* Navigation */}
-                <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a]/95 backdrop-blur-md border-b border-[#c9a050]/20">
+                <nav className="fixed top-0 right-0 left-0 z-50 border-b border-[#c9a050]/20 bg-[#1a1a1a]/95 backdrop-blur-md">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between h-16">
+                        <div className="flex h-16 items-center justify-between">
                             <Link href="/" className="flex items-center gap-3">
-                                <div className="text-[#c9a050] font-bold text-xl">
-                                    {t.brand_name}
-                                </div>
+                                <div className="text-xl font-bold text-[#c9a050]">{t.brand_name}</div>
                             </Link>
-                            
-                            <div className="hidden md:flex items-center gap-8">
-                                <Link href="/" className="text-white hover:text-[#c9a050] transition-colors text-sm font-medium">
+
+                            <div className="hidden items-center gap-8 md:flex">
+                                <Link href="/" className="text-sm font-medium text-white transition-colors hover:text-[#c9a050]">
                                     {t.home}
                                 </Link>
-                                <Link href="#projects" className="text-gray-300 hover:text-[#c9a050] transition-colors text-sm font-medium">
+                                <a href="#projects" className="text-sm font-medium text-gray-300 transition-colors hover:text-[#c9a050]">
                                     {t.properties}
-                                </Link>
-                                <Link href="#about" className="text-gray-300 hover:text-[#c9a050] transition-colors text-sm font-medium">
+                                </a>
+                                <a href="#about" className="text-sm font-medium text-gray-300 transition-colors hover:text-[#c9a050]">
                                     {t.about}
-                                </Link>
-                                <Link href="#contact" className="text-gray-300 hover:text-[#c9a050] transition-colors text-sm font-medium">
+                                </a>
+                                <a href="#contact" className="text-sm font-medium text-gray-300 transition-colors hover:text-[#c9a050]">
                                     {t.contact}
-                                </Link>
+                                </a>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <div className="flex items-center border border-[#c9a050]/30 rounded overflow-hidden">
+                                <div className="flex items-center overflow-hidden rounded border border-[#c9a050]/30">
                                     {availableLocales.map((loc) => (
                                         <Link
                                             key={loc}
                                             href={`/locale/${loc}`}
                                             className={`px-3 py-1.5 text-xs transition-colors ${
-                                                locale === loc
-                                                    ? 'bg-[#c9a050] text-[#1a1a1a] font-semibold'
-                                                    : 'text-gray-300 hover:text-white'
+                                                locale === loc ? 'bg-[#c9a050] font-semibold text-[#1a1a1a]' : 'text-gray-300 hover:text-white'
                                             }`}
                                         >
                                             {localeNames[loc]}
@@ -153,79 +154,86 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                 </nav>
 
                 {/* Hero Section */}
-                <section className="relative min-h-screen flex items-center justify-center pt-16">
+                <section className="relative flex min-h-screen items-center justify-center pt-16">
                     <div className="absolute inset-0">
                         <img
-                            src={featuredProjects[0]?.image_url || projects[0]?.image_url || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920'}
+                            src={
+                                featuredProjects[0]?.image_url ||
+                                projects[0]?.image_url ||
+                                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920'
+                            }
                             alt="Hero"
-                            className="w-full h-full object-cover"
+                            className="h-full w-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70"></div>
                     </div>
 
-                    <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                            {t.hero_title}
-                        </h1>
-                        <p className="text-xl md:text-2xl text-[#c9a050] font-medium mb-12">
-                            {t.hero_subtitle}
-                        </p>
+                    <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+                        <h1 className="mb-4 text-4xl leading-tight font-bold text-white md:text-5xl lg:text-6xl">{t.hero_title}</h1>
+                        <p className="mb-12 text-xl font-medium text-[#c9a050] md:text-2xl">{t.hero_subtitle}</p>
                     </div>
 
                     {/* Search Filter Bar */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-[#1a1a1a]/95 backdrop-blur-md border-t border-[#c9a050]/20">
+                    <div className="absolute right-0 bottom-0 left-0 border-t border-[#c9a050]/20 bg-[#1a1a1a]/95 backdrop-blur-md">
                         <div className="mx-auto max-w-6xl px-4 py-6">
-                            <div className="flex items-center justify-end gap-2 mb-4">
-                                <span className="text-[#c9a050] text-sm font-medium">{t.search_your_unit}</span>
+                            <div className="mb-4 flex items-center justify-end gap-2">
+                                <span className="text-sm font-medium text-[#c9a050]">{t.search_your_unit}</span>
                             </div>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+                            <div className="grid grid-cols-1 items-end gap-4 md:grid-cols-4">
                                 <div>
-                                    <label className="block text-gray-400 text-xs mb-2">{t.project}</label>
-                                    <select 
+                                    <label className="mb-2 block text-xs text-gray-400">{t.project}</label>
+                                    <select
                                         value={selectedProject}
                                         onChange={(e) => setSelectedProject(e.target.value)}
-                                        className="w-full bg-[#2d2d2d] border border-[#3d3d3d] text-white px-4 py-3 rounded focus:border-[#c9a050] focus:outline-none"
+                                        className="w-full rounded border border-[#3d3d3d] bg-[#2d2d2d] px-4 py-3 text-white focus:border-[#c9a050] focus:outline-none"
                                     >
                                         <option value="">{t.all}</option>
                                         {allProjects.map((project) => (
-                                            <option key={project.id} value={project.slug}>{project.name}</option>
+                                            <option key={project.id} value={project.slug}>
+                                                {project.name}
+                                            </option>
                                         ))}
                                     </select>
                                 </div>
-                                
+
                                 <div>
-                                    <label className="block text-gray-400 text-xs mb-2">{t.type}</label>
-                                    <select 
+                                    <label className="mb-2 block text-xs text-gray-400">{t.type}</label>
+                                    <select
                                         value={selectedType}
                                         onChange={(e) => setSelectedType(e.target.value)}
-                                        className="w-full bg-[#2d2d2d] border border-[#3d3d3d] text-white px-4 py-3 rounded focus:border-[#c9a050] focus:outline-none"
+                                        className="w-full rounded border border-[#3d3d3d] bg-[#2d2d2d] px-4 py-3 text-white focus:border-[#c9a050] focus:outline-none"
                                     >
                                         <option value="">{t.all}</option>
                                         {propertyTypes.map((type) => (
-                                            <option key={type} value={type}>{t[type] || type}</option>
+                                            <option key={type} value={type}>
+                                                {t[type] || type}
+                                            </option>
                                         ))}
                                     </select>
                                 </div>
-                                
+
                                 <div>
-                                    <label className="block text-gray-400 text-xs mb-2">
-                                        {t.area} - <span className="text-[#c9a050]">{areaRange}+ {t.sqm}</span>
+                                    <label className="mb-2 block text-xs text-gray-400">
+                                        {t.area} -{' '}
+                                        <span className="text-[#c9a050]">
+                                            {areaRange}+ {t.sqm}
+                                        </span>
                                     </label>
-                                    <input 
-                                        type="range" 
-                                        min="50" 
-                                        max="500" 
+                                    <input
+                                        type="range"
+                                        min="50"
+                                        max="500"
                                         value={areaRange}
                                         onChange={(e) => setAreaRange(parseInt(e.target.value))}
-                                        className="w-full h-2 bg-[#3d3d3d] rounded-lg appearance-none cursor-pointer"
+                                        className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-[#3d3d3d]"
                                     />
                                 </div>
-                                
+
                                 <div>
-                                    <button 
+                                    <button
                                         onClick={handleSearch}
-                                        className="w-full bg-[#c9a050] hover:bg-[#d4a84a] text-[#1a1a1a] font-semibold py-3 px-6 rounded transition-all"
+                                        className="w-full rounded bg-[#c9a050] px-6 py-3 font-semibold text-[#1a1a1a] transition-all hover:bg-[#d4a84a]"
                                     >
                                         {t.search}
                                     </button>
@@ -236,38 +244,34 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                 </section>
 
                 {/* Featured Projects Section */}
-                <section id="projects" className="py-20 bg-white">
+                <section id="projects" className="bg-white py-20">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-16">
-                            <p className="text-[#c9a050] text-lg font-medium mb-4">
-                                {t.various_units}
-                            </p>
+                        <div className="mb-16 text-center">
+                            <p className="mb-4 text-lg font-medium text-[#c9a050]">{t.various_units}</p>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-16">
+                        <div className="mb-16 grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
                             {projects.slice(0, 8).map((project) => (
                                 <Link
                                     key={project.id}
                                     href={`/project/${project.slug}`}
-                                    className="group flex flex-col items-center text-center p-6 hover:bg-gray-50 rounded-lg transition-all"
+                                    className="group flex flex-col items-center rounded-lg p-6 text-center transition-all hover:bg-gray-50"
                                 >
-                                    <div className="relative w-24 h-24 mb-4 overflow-hidden rounded-lg">
+                                    <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-lg">
                                         <img
                                             src={project.image_url}
                                             alt={project.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                         />
-                                        {project.is_featured && (
-                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#c9a050] rounded-full"></div>
-                                        )}
+                                        {project.is_featured && <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#c9a050]"></div>}
                                     </div>
-                                    <h3 className="text-gray-900 font-semibold text-lg group-hover:text-[#c9a050] transition-colors">
+                                    <h3 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#c9a050]">
                                         {project.name}
                                     </h3>
-                                    <p className="text-gray-500 text-xs mt-1">
+                                    <p className="mt-1 text-xs text-gray-500">
                                         {project.location} • {project.area_sqm} {t.sqm}
                                     </p>
-                                    <p className="text-[#c9a050] text-sm mt-1 font-medium">
+                                    <p className="mt-1 text-sm font-medium text-[#c9a050]">
                                         {t.from} ${project.price_starts_at}
                                     </p>
                                 </Link>
@@ -275,65 +279,71 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                         </div>
 
                         <div className="text-center">
-                            <Link
-                                href="#"
-                                className="inline-block border-2 border-[#c9a050] text-[#c9a050] hover:bg-[#c9a050] hover:text-white px-8 py-3 rounded font-medium transition-all"
+                            <a
+                                href="#all-properties"
+                                className="inline-block rounded border-2 border-[#c9a050] px-8 py-3 font-medium text-[#c9a050] transition-all hover:bg-[#c9a050] hover:text-white"
                             >
                                 {t.view_all}
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </section>
 
                 {/* Properties Grid Section */}
-                <section className="py-20 bg-[#f5f5f5]">
+                <section id="all-properties" className="bg-[#f5f5f5] py-20">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-                            {t.our_properties}
-                        </h2>
-                        
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t.our_properties}</h2>
+
+                        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             {projects.map((project) => (
                                 <Link
                                     key={project.id}
                                     href={`/project/${project.slug}`}
-                                    className="group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                                    className="group overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-2xl"
                                 >
                                     <div className="relative aspect-[4/3] overflow-hidden">
                                         <img
                                             src={project.image_url}
                                             alt={project.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                        <div className="absolute top-4 right-4 bg-[#c9a050] text-white px-3 py-1 rounded text-sm font-medium">
+                                        <div className="absolute top-4 right-4 rounded bg-[#c9a050] px-3 py-1 text-sm font-medium text-white">
                                             {t.from} ${project.price_starts_at}
                                         </div>
                                         {project.is_featured && (
-                                            <div className="absolute top-4 left-4 bg-white/90 text-[#c9a050] px-2 py-1 rounded text-xs font-semibold">
+                                            <div className="absolute top-4 left-4 rounded bg-white/90 px-2 py-1 text-xs font-semibold text-[#c9a050]">
                                                 ★ {t.featured_property}
                                             </div>
                                         )}
                                     </div>
                                     <div className="p-6">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#c9a050] transition-colors">
+                                        <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-[#c9a050]">
                                             {project.name}
                                         </h3>
-                                        <p className="text-gray-500 text-sm mb-3">
-                                            {project.location}
-                                        </p>
-                                        <div className="flex items-center gap-4 text-gray-600 text-sm mb-3">
+                                        <p className="mb-3 text-sm text-gray-500">{project.location}</p>
+                                        <div className="mb-3 flex items-center gap-4 text-sm text-gray-600">
                                             {project.bedrooms !== null && (
                                                 <span className="flex items-center gap-1">
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                                        />
                                                     </svg>
                                                     {project.bedrooms} {t.bedrooms}
                                                 </span>
                                             )}
                                             {project.area_sqm && (
                                                 <span className="flex items-center gap-1">
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                                                        />
                                                     </svg>
                                                     {project.area_sqm} {t.sqm}
                                                 </span>
@@ -350,61 +360,57 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                 </section>
 
                 {/* About Section */}
-                <section id="about" className="py-20 bg-[#1a1a1a]">
+                <section id="about" className="bg-[#1a1a1a] py-20">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid lg:grid-cols-2 gap-12 items-center">
-                            <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl">
+                        <div className="grid items-center gap-12 lg:grid-cols-2">
+                            <div className="relative aspect-video overflow-hidden rounded-lg shadow-2xl">
                                 <img
-                                    src={featuredProjects[0]?.image_url || projects[0]?.image_url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}
+                                    src={
+                                        featuredProjects[0]?.image_url ||
+                                        projects[0]?.image_url ||
+                                        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'
+                                    }
                                     alt="Featured Project"
-                                    className="w-full h-full object-cover"
+                                    className="h-full w-full object-cover"
                                 />
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer hover:bg-black/40 transition-colors">
-                                    <div className="w-16 h-16 bg-[#c9a050] rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                                        <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z"/>
+                                <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/30 transition-colors hover:bg-black/40">
+                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#c9a050] transition-transform hover:scale-110">
+                                        <svg className="ml-1 h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className={isRTL ? 'text-right' : 'text-left'}>
-                                <h2 className="text-3xl md:text-4xl font-bold text-[#c9a050] mb-4">
-                                    {t.about_title}
-                                </h2>
-                                <p className="text-gray-300 mb-6 leading-relaxed">
-                                    {t.about_description}
-                                </p>
-                                <Link
+                                <h2 className="mb-4 text-3xl font-bold text-[#c9a050] md:text-4xl">{t.about_title}</h2>
+                                <p className="mb-6 leading-relaxed text-gray-300">{t.about_description}</p>
+                                <a
                                     href="#contact"
-                                    className="inline-flex items-center gap-2 text-[#c9a050] hover:text-[#b8923a] font-medium transition-colors"
+                                    className="inline-flex items-center gap-2 font-medium text-[#c9a050] transition-colors hover:text-[#b8923a]"
                                 >
                                     {t.read_more}
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {/* Contact Section */}
-                <section id="contact" className="py-20 bg-white">
+                <section id="contact" className="bg-white py-20">
                     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
-                            {t.get_in_touch}
-                        </h2>
-                        <p className="text-gray-600 text-center mb-12">
-                            {t.get_in_touch_desc}
-                        </p>
-                        
-                        <form onSubmit={handleContactSubmit} className="space-y-6 bg-gray-50 p-8 rounded-lg shadow-lg">
-                            <div className="grid md:grid-cols-2 gap-6">
+                        <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">{t.get_in_touch}</h2>
+                        <p className="mb-12 text-center text-gray-600">{t.get_in_touch_desc}</p>
+
+                        <form onSubmit={handleContactSubmit} className="space-y-6 rounded-lg bg-gray-50 p-8 shadow-lg">
+                            <div className="grid gap-6 md:grid-cols-2">
                                 <div>
                                     <input
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         placeholder={t.your_name}
-                                        className={`w-full px-4 py-3 border rounded focus:border-[#c9a050] focus:outline-none transition-all ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                                        className={`w-full rounded border px-4 py-3 transition-all focus:border-[#c9a050] focus:outline-none ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
                                     />
                                     {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
                                 </div>
@@ -414,7 +420,7 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         placeholder={t.your_email}
-                                        className={`w-full px-4 py-3 border rounded focus:border-[#c9a050] focus:outline-none transition-all ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                                        className={`w-full rounded border px-4 py-3 transition-all focus:border-[#c9a050] focus:outline-none ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                                     />
                                     {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
                                 </div>
@@ -425,7 +431,7 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                     value={data.phone}
                                     onChange={(e) => setData('phone', e.target.value)}
                                     placeholder={t.your_phone}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded focus:border-[#c9a050] focus:outline-none transition-all"
+                                    className="w-full rounded border border-gray-300 px-4 py-3 transition-all focus:border-[#c9a050] focus:outline-none"
                                 />
                             </div>
                             <div>
@@ -434,14 +440,14 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                     value={data.message}
                                     onChange={(e) => setData('message', e.target.value)}
                                     placeholder={t.your_message}
-                                    className={`w-full px-4 py-3 border rounded focus:border-[#c9a050] focus:outline-none transition-all resize-none ${errors.message ? 'border-red-500' : 'border-gray-300'}`}
+                                    className={`w-full resize-none rounded border px-4 py-3 transition-all focus:border-[#c9a050] focus:outline-none ${errors.message ? 'border-red-500' : 'border-gray-300'}`}
                                 />
                                 {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
                             </div>
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full bg-[#c9a050] hover:bg-[#b8923a] text-white font-semibold py-3 px-6 rounded transition-all hover:shadow-lg disabled:opacity-50"
+                                className="w-full rounded bg-[#c9a050] px-6 py-3 font-semibold text-white transition-all hover:bg-[#b8923a] hover:shadow-lg disabled:opacity-50"
                             >
                                 {processing ? t.sending + '...' : t.send_message}
                             </button>
@@ -450,61 +456,78 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                 </section>
 
                 {/* Footer */}
-                <footer className="bg-[#1a1a1a] text-white py-16 border-t border-[#c9a050]/20">
+                <footer className="border-t border-[#c9a050]/20 bg-[#1a1a1a] py-16 text-white">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                        <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-4">
                             <div className="md:col-span-1">
-                                <div className="text-[#c9a050] font-bold text-2xl mb-2">
-                                    {t.brand_name}
-                                </div>
-                                <p className="text-gray-400 text-sm">
-                                    {t.brand_tagline}
-                                </p>
+                                <div className="mb-2 text-2xl font-bold text-[#c9a050]">{t.brand_name}</div>
+                                <p className="text-sm text-gray-400">{t.brand_tagline}</p>
                             </div>
-                            
+
                             <div>
-                                <h3 className="text-[#c9a050] font-semibold mb-4">{t.payment_methods}</h3>
+                                <h3 className="mb-4 font-semibold text-[#c9a050]">{t.payment_methods}</h3>
                                 <div className="flex gap-3">
-                                    <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
+                                    <div className="flex h-8 w-12 items-center justify-center rounded bg-white/10">
                                         <span className="text-xs text-gray-400">VISA</span>
                                     </div>
-                                    <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
+                                    <div className="flex h-8 w-12 items-center justify-center rounded bg-white/10">
                                         <span className="text-xs text-gray-400">MC</span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div>
-                                <h3 className="text-[#c9a050] font-semibold mb-4">{t.follow_us}</h3>
+                                <h3 className="mb-4 font-semibold text-[#c9a050]">{t.follow_us}</h3>
                                 <div className="flex gap-4">
-                                    <a href="#" className="text-gray-400 hover:text-[#c9a050] transition-colors">FB</a>
-                                    <a href="#" className="text-gray-400 hover:text-[#c9a050] transition-colors">IG</a>
-                                    <a href="#" className="text-gray-400 hover:text-[#c9a050] transition-colors">TW</a>
+                                    <a
+                                        href="https://facebook.com"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-gray-400 transition-colors hover:text-[#c9a050]"
+                                    >
+                                        FB
+                                    </a>
+                                    <a
+                                        href="https://instagram.com"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-gray-400 transition-colors hover:text-[#c9a050]"
+                                    >
+                                        IG
+                                    </a>
+                                    <a
+                                        href="https://x.com"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-gray-400 transition-colors hover:text-[#c9a050]"
+                                    >
+                                        TW
+                                    </a>
                                 </div>
                             </div>
-                            
+
                             <div>
-                                <h3 className="text-[#c9a050] font-semibold mb-4">{t.contact_info}</h3>
-                                <div className="space-y-2 text-gray-400 text-sm">
+                                <h3 className="mb-4 font-semibold text-[#c9a050]">{t.contact_info}</h3>
+                                <div className="space-y-2 text-sm text-gray-400">
                                     <p>(02) 19691</p>
                                     <p>info@alnader.com</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div className="pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+
+                        <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
                             <p>{t.copyright?.replace(':year', new Date().getFullYear().toString()) || '© 2026 Al-Nader. All rights reserved.'}</p>
                         </div>
                     </div>
                 </footer>
 
                 {/* Floating Reserve Button */}
-                <Link
+                <a
                     href="#contact"
-                    className="fixed bottom-6 right-6 bg-[#c9a050] hover:bg-[#b8923a] text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-all hover:shadow-xl z-50"
+                    className="fixed right-6 bottom-6 z-50 rounded-full bg-[#c9a050] px-6 py-3 font-semibold text-white shadow-lg transition-all hover:bg-[#b8923a] hover:shadow-xl"
                 >
                     {t.reserve_unit}
-                </Link>
+                </a>
             </div>
         </>
     );

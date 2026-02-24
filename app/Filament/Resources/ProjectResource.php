@@ -28,10 +28,29 @@ use UnitEnum;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
+
     protected static string|UnitEnum|null $navigationGroup = 'Real Estate';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.properties');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('messages.project');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.properties');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -42,7 +61,7 @@ class ProjectResource extends Resource
                 TextInput::make('slug')->label(__('Slug'))->required()->maxLength(255)->unique(ignoreRecord: true),
                 Select::make('type')->label(__('Property Type'))->options([
                     'apartment' => 'Apartment', 'villa' => 'Villa', 'townhouse' => 'Townhouse',
-                    'penthouse' => 'Penthouse', 'duplex' => 'Duplex', 'commercial' => 'Commercial',
+                    'duplex' => 'Duplex', 'penthouse' => 'Penthouse', 'studio' => 'Studio', 'commercial' => 'Commercial',
                 ])->required()->searchable(),
                 TextInput::make('location')->label(__('Location'))->required()->maxLength(255),
             ])->columns(2),
@@ -52,12 +71,16 @@ class ProjectResource extends Resource
                 TextInput::make('bedrooms')->label(__('Bedrooms'))->numeric(),
                 TextInput::make('bathrooms')->label(__('Bathrooms'))->numeric(),
                 Toggle::make('is_featured')->label(__('Featured')),
+                Select::make('status')->label(__('Availability'))->options([
+                    'available' => __('Available'),
+                    'sold' => __('Sold'),
+                ])->default('available')->required(),
             ])->columns(3),
             Section::make(__('Description'))->schema([
                 RichEditor::make('description')->label(__('Description'))->required()->columnSpanFull(),
             ]),
             Section::make(__('Media'))->schema([
-                TextInput::make('image_url')->label(__('Image URL'))->url()->columnSpanFull(),
+                TextInput::make('image_url')->label(__('Image URL'))->url()->required()->columnSpanFull(),
             ]),
         ]);
     }
@@ -70,12 +93,25 @@ class ProjectResource extends Resource
                 TextColumn::make('type')->label(__('Type'))->badge()->searchable()->sortable(),
                 TextColumn::make('location')->label(__('Location'))->searchable()->toggleable(),
                 TextColumn::make('price_starts_at')->label(__('Price'))->sortable(),
+                TextColumn::make('status')->label(__('Availability'))->badge()->sortable(),
                 IconColumn::make('is_featured')->label(__('Featured'))->boolean()->sortable(),
                 TextColumn::make('created_at')->label(__('Created'))->dateTime('M j, Y')->sortable(),
             ])
             ->filters([
-                SelectFilter::make('type')->options(['apartment' => 'Apartment', 'villa' => 'Villa']),
+                SelectFilter::make('type')->options([
+                    'apartment' => 'Apartment',
+                    'villa' => 'Villa',
+                    'townhouse' => 'Townhouse',
+                    'duplex' => 'Duplex',
+                    'penthouse' => 'Penthouse',
+                    'studio' => 'Studio',
+                    'commercial' => 'Commercial',
+                ]),
                 TernaryFilter::make('is_featured')->label(__('Featured')),
+                SelectFilter::make('status')->options([
+                    'available' => __('Available'),
+                    'sold' => __('Sold'),
+                ]),
             ])
             ->recordActions([ViewAction::make(), EditAction::make(), DeleteAction::make()])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])])

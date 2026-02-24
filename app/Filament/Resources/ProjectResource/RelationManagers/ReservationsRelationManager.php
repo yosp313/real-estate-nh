@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 class ReservationsRelationManager extends RelationManager
 {
     protected static string $relationship = 'reservations';
+
     protected static ?string $recordTitleAttribute = 'customer_name';
 
     public function form(Schema $schema): Schema

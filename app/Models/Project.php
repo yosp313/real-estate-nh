@@ -17,6 +17,7 @@ class Project extends Model
         'bedrooms',
         'bathrooms',
         'is_featured',
+        'status',
         'price_starts_at',
         'image_url',
     ];
@@ -27,6 +28,11 @@ class Project extends Model
         'bathrooms' => 'integer',
         'is_featured' => 'boolean',
     ];
+
+    public function isAvailable(): bool
+    {
+        return $this->status === 'available';
+    }
 
     /**
      * Get all reservations for this project.

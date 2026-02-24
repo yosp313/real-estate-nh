@@ -17,36 +17,42 @@ return [
     'blogs' => 'مدونات',
     'login' => 'تسجيل دخول',
     'register' => 'إنشاء حساب',
-    
+    'english' => 'الإنجليزية',
+    'arabic' => 'العربية',
+
     // Brand
     'brand_name' => 'النادر',
     'brand_tagline' => 'للاستثمار العقاري و التجارة و المقاولات',
     'brand_short' => 'النادر للعقارات',
-    
+
     // Homepage Hero
     'page_title' => 'النادر | للاستثمار العقاري و التجارة و المقاولات',
     'hero_title' => 'الآن يمكنك حجز وحدتك أونلاين',
     'hero_subtitle' => 'مع مجموعة النادر',
     'search_your_unit' => 'ابحث على وحدتك',
     'project' => 'المشروع',
+    'reservation' => 'الحجز',
+    'reservations' => 'الحجوزات',
+    'contact_record' => 'رسالة',
+    'contacts' => 'الرسائل',
     'type' => 'النوع',
     'area' => 'المساحة',
     'area_unit' => 'م²',
     'all' => 'الكل',
     'reserve_unit' => 'احجز وحدتك',
-    
+
     // Featured Section
     'featured_property' => 'العقار المميز',
     'exclusive_estate' => 'عقار عصري حصري',
     'featured_projects' => 'مشاريعنا المميزة',
     'various_units' => 'مجموعة متنوعة من الوحدات المختلفة بأنظمة سداد متعددة تناسب جميع الأذواق',
-    
+
     // About Section
     'about_nh' => 'من نحن',
     'about_title' => 'مجموعة النادر القابضة',
     'about_description' => 'تعد مجموعة النادر القابضة من كبريات الشركات الرائدة في مجال التطوير العقاري في مصر والشرق الأوسط. حيث أن لها باع طويل في هذا المجال وخبرة واسعة، وتتمتع بسجل حافل بإنجازاتها على مدار سنوات عديدة، قامت خلالها بتطوير أكثر من ملايين الأمتار المربعة من الأراضي وبيع آلاف الوحدات العقارية.',
     'read_more' => 'متابعة القراءة',
-    
+
     // Services Section
     'our_services' => 'خدماتنا',
     'property_sales' => 'مبيعات العقارات',
@@ -57,13 +63,13 @@ return [
     'investment_consulting_desc' => 'إرشادات خبيرة لفرص الاستثمار العقاري',
     'market_analysis' => 'تحليل السوق',
     'market_analysis_desc' => 'أبحاث سوقية متعمقة وخدمات تقييم العقارات',
-    
+
     // Properties Section
     'our_properties' => 'مشاريعنا',
     'view_all' => 'عرض الكل',
     'from' => 'يبدأ من',
     'sqm' => 'م²',
-    
+
     // Property Types
     'apartment' => 'شقة',
     'villa' => 'فيلا',
@@ -71,7 +77,8 @@ return [
     'duplex' => 'دوبلكس',
     'penthouse' => 'بنتهاوس',
     'studio' => 'استوديو',
-    
+    'commercial' => 'تجاري',
+
     // Contact Section
     'get_in_touch' => 'تواصل معنا',
     'get_in_touch_desc' => 'هل أنت مهتم بمعرفة المزيد؟ نحب أن نسمع منك.',
@@ -80,7 +87,7 @@ return [
     'your_message' => 'رسالتك',
     'your_phone' => 'رقم هاتفك',
     'send_message' => 'إرسال الرسالة',
-    
+
     // Footer
     'navigation' => 'التنقل',
     'contact_info' => 'تواصل معنا',
@@ -91,7 +98,7 @@ return [
     'all_rights_reserved' => 'جميع الحقوق محفوظة',
     'privacy_policy' => 'سياسة الخصوصية',
     'terms_of_use' => 'شروط الاستخدام',
-    
+
     // Property Detail Page
     'back_to_properties' => 'العودة للمشاريع',
     'starting_from' => 'يبدأ من',
@@ -103,16 +110,27 @@ return [
     'phone_number' => 'رقم الهاتف',
     'submit_inquiry' => 'إرسال الاستفسار',
     'privacy_note' => 'ستبقى معلوماتك سرية وستستخدم فقط للتواصل معك بخصوص هذا العقار.',
-    
+
     // Form Messages
     'registration_success' => 'تم التسجيل بنجاح! سنتواصل معك قريباً.',
     'already_registered' => 'أنت مسجل بالفعل في هذا المشروع.',
+    'project_unavailable' => 'هذا المشروع غير متاح حالياً للحجز.',
+    'reservation_status_submitted' => 'تم الاستلام',
+    'reservation_status_pending' => 'قيد المراجعة',
+    'reservation_status_accepted' => 'تم القبول',
+    'reservation_status_rejected' => 'تم الرفض',
+    'reservation_mail_subject' => 'حالة الحجز: :status',
+    'reservation_mail_greeting' => 'مرحباً :name،',
+    'reservation_mail_project' => 'المشروع: :project',
+    'reservation_mail_status' => 'الحالة الحالية: :status',
+    'reservation_mail_reference' => 'رقم الحجز: #:id',
+    'reservation_mail_footer' => 'شكراً لاختيارك لنا. سيتواصل معك فريقنا قريباً.',
     'contact_success' => 'شكراً لرسالتك! سنتواصل معك قريباً.',
     'name_required' => 'الرجاء إدخال اسمك.',
     'email_required' => 'الرجاء إدخال بريدك الإلكتروني.',
     'email_invalid' => 'الرجاء إدخال بريد إلكتروني صحيح.',
     'message_required' => 'الرجاء إدخال رسالتك.',
-    
+
     // Property Details
     'bedrooms' => 'غرف النوم',
     'bathrooms' => 'الحمامات',
@@ -120,7 +138,7 @@ return [
     'property_location' => 'الموقع',
     'property_type' => 'النوع',
     'related_properties' => 'عقارات ذات صلة',
-    
+
     // Copyright
     'copyright' => '© :year جميع حقوق الطبع والنشر محفوظة لمجموعة النادر',
     'developed_by' => 'طور بواسطة',
