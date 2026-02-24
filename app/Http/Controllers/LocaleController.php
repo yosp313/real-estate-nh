@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use App\Services\Exceptions\InvalidLocaleException;
+use App\Services\LocaleService;
+use Illuminate\Http\RedirectResponse;
 
 class LocaleController extends Controller
 {
-    public function setLocale(Request $request, string $locale)
-    {
-        $availableLocales = config('app.available_locales', ['en']);
+    public function __construct(private LocaleService $localeService) {}
 
-        if (! in_array($locale, $availableLocales)) {
+    public function setLocale(string $locale): RedirectResponse
+    {
+        try {
+            $this->localeService->setLocale($locale);
+        } catch (InvalidLocaleException) {
             abort(404);
         }
-
-        Session::put('locale', $locale);
-        App::setLocale($locale);
 
         return redirect()->back();
     }
