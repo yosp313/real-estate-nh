@@ -47,6 +47,12 @@ return [
     'featured_projects' => 'مشاريعنا المميزة',
     'various_units' => 'مجموعة متنوعة من الوحدات المختلفة بأنظمة سداد متعددة تناسب جميع الأذواق',
 
+    // Stats Bar
+    'stat_projects_label' => 'مشروع مسلّم',
+    'stat_years_label' => 'سنة خبرة',
+    'stat_clients_label' => 'عميل سعيد',
+    'stat_rating_label' => 'تقييم العملاء',
+
     // About Section
     'about_nh' => 'من نحن',
     'about_title' => 'مجموعة النادر القابضة',
@@ -130,6 +136,7 @@ return [
     'email_required' => 'الرجاء إدخال بريدك الإلكتروني.',
     'email_invalid' => 'الرجاء إدخال بريد إلكتروني صحيح.',
     'message_required' => 'الرجاء إدخال رسالتك.',
+    'unexpected_error' => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
 
     // Property Details
     'bedrooms' => 'غرف النوم',

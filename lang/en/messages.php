@@ -47,6 +47,12 @@ return [
     'featured_projects' => 'Our Featured Projects',
     'various_units' => 'A diverse collection of units with multiple payment plans to suit all preferences',
 
+    // Stats Bar
+    'stat_projects_label' => 'Projects Delivered',
+    'stat_years_label' => 'Years of Experience',
+    'stat_clients_label' => 'Happy Clients',
+    'stat_rating_label' => 'Client Rating',
+
     // About Section
     'about_nh' => 'About Us',
     'about_title' => 'Al-Nader Holding Group',
@@ -130,6 +136,7 @@ return [
     'email_required' => 'Please enter your email address.',
     'email_invalid' => 'Please enter a valid email address.',
     'message_required' => 'Please enter your message.',
+    'unexpected_error' => 'Something went wrong. Please try again.',
 
     // Property Details
     'bedrooms' => 'Bedrooms',
