@@ -19,6 +19,9 @@ return [
     'register' => 'Register',
     'english' => 'English',
     'arabic' => 'Arabic',
+    'theme_toggle_dark'  => 'Dark',
+    'theme_toggle_light' => 'Light',
+    'theme_toggle_label' => 'Toggle theme',
 
     // Brand
     'brand_name' => 'Al-Nader',
