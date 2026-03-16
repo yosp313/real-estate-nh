@@ -1,3 +1,4 @@
+import { Navbar } from '@/components/Navbar';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -159,53 +160,11 @@ export default function Show({ project, relatedProjects }: Props) {
             />
 
             <div className={`grain-overlay min-h-screen bg-[#080808] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-                {/* Language Switcher */}
-                <div className="fixed top-6 right-6 z-50">
-                    <div className="flex overflow-hidden rounded-full border border-[#c9a050]/20 bg-[#080808]/80 backdrop-blur-xl">
-                        {availableLocales.map((loc) => (
-                            <Link
-                                key={loc}
-                                href={`/locale/${loc}`}
-                                className={`px-4 py-2 text-xs font-medium tracking-wider transition-all duration-300 ${
-                                    locale === loc ? 'bg-[#c9a050] font-semibold text-[#080808]' : 'text-white/50 hover:text-white'
-                                }`}
-                            >
-                                {localeNames[loc]}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
                 {/* ─── Navigation ─── */}
-                <nav className="border-b border-[#c9a050]/10 bg-[#080808]">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <div className="flex h-20 items-center justify-between">
-                            <Link
-                                href="/"
-                                className="font-serif text-2xl font-bold tracking-wide text-[#c9a050] transition-colors hover:text-[#e8c254]"
-                            >
-                                {t.brand_name}
-                            </Link>
-                            <Link
-                                href="/"
-                                className="group flex items-center gap-2 text-xs font-medium tracking-widest text-white/40 uppercase transition-colors hover:text-[#c9a050]"
-                            >
-                                <svg
-                                    className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'rotate-180 group-hover:translate-x-1' : 'group-hover:-translate-x-1'}`}
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-                                </svg>
-                                {t.back_to_properties}
-                            </Link>
-                        </div>
-                    </div>
-                </nav>
+                <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
                 {/* ─── Hero Image ─── */}
-                <section className="animate-on-scroll relative">
+                <section className="animate-on-scroll relative pt-20">
                     <div className="relative aspect-[21/9] max-h-[60vh] w-full overflow-hidden">
                         <img src={project.image_url} alt={project.name} className="h-full w-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/20 to-transparent"></div>

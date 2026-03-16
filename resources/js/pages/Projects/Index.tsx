@@ -1,3 +1,4 @@
+import { Navbar } from '@/components/Navbar';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -182,58 +183,7 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
 
             <div className={`grain-overlay min-h-screen [scroll-behavior:smooth] bg-[#080808] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
                 {/* ─── Navigation ─── */}
-                <nav className="fixed top-0 right-0 left-0 z-50 border-b border-[#c9a050]/10 bg-[#080808]/90 backdrop-blur-xl">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <div className="flex h-20 items-center justify-between">
-                            <Link href="/" className="flex items-center gap-3">
-                                <div className="font-serif text-2xl font-bold tracking-wide text-[#c9a050]">{t.brand_name}</div>
-                            </Link>
-
-                            <div className="hidden items-center gap-10 md:flex">
-                                {[
-                                    { href: '/', label: t.home, isLink: true },
-                                    { href: '#projects', label: t.properties, isLink: false },
-                                    { href: '#about', label: t.about, isLink: false },
-                                    { href: '#contact', label: t.contact, isLink: false },
-                                ].map((item) =>
-                                    item.isLink ? (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            className="hover-gold-underline text-sm font-medium tracking-widest text-white/90 uppercase transition-colors duration-300 hover:text-[#c9a050]"
-                                        >
-                                            {item.label}
-                                        </Link>
-                                    ) : (
-                                        <a
-                                            key={item.href}
-                                            href={item.href}
-                                            className="hover-gold-underline text-sm font-medium tracking-widest text-white/60 uppercase transition-colors duration-300 hover:text-[#c9a050]"
-                                        >
-                                            {item.label}
-                                        </a>
-                                    ),
-                                )}
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center overflow-hidden rounded-full border border-[#c9a050]/20">
-                                    {availableLocales.map((loc) => (
-                                        <Link
-                                            key={loc}
-                                            href={`/locale/${loc}`}
-                                            className={`cursor-pointer px-4 py-1.5 text-xs font-medium tracking-wider transition-all duration-300 ${
-                                                locale === loc ? 'bg-[#c9a050] font-semibold text-[#080808]' : 'text-white/50 hover:text-white'
-                                            }`}
-                                        >
-                                            {localeNames[loc]}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
+                <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
                 {/* ─── Hero Section ─── */}
                 <section className="relative flex min-h-screen items-center justify-center overflow-hidden pt-20">
