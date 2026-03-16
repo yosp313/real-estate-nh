@@ -11,7 +11,7 @@
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|cairo:300,400,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=playfair-display:400,500,600,700,800,900|dm-sans:300,400,500,600,700|cairo:300,400,500,600,700" rel="stylesheet" />
 
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
