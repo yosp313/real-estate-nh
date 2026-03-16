@@ -482,3 +482,41 @@ input[type='range']::-moz-range-thumb {
     transform: rotate(45deg);
     flex-shrink: 0;
 }
+
+/* ───────────────────────────────────────────────
+   Light Theme Overrides
+   ─────────────────────────────────────────────── */
+[data-theme='light'] {
+    /* Background system */
+    --theme-bg-primary: #faf8f4;
+    --theme-bg-secondary: #f7f3eb;
+    --theme-bg-card: #ffffff;
+    --theme-bg-nav: rgba(250, 248, 244, 0.92);
+
+    /* Text system */
+    --theme-text-primary: #1a1a1a;
+    --theme-text-secondary: #4d4d4d;
+    --theme-text-muted: rgba(26, 26, 26, 0.6);
+
+    /* Border system */
+    --theme-border: rgba(201, 160, 80, 0.25);
+}
+
+/* Apply to site wrapper */
+[data-theme='light'] .grain-overlay {
+    background-color: var(--theme-bg-primary) !important;
+}
+
+[data-theme='light'] nav {
+    background-color: var(--theme-bg-nav) !important;
+    border-color: var(--theme-border) !important;
+}
+
+[data-theme='light'] nav a,
+[data-theme='light'] nav span {
+    color: var(--theme-text-primary) !important;
+}
+
+[data-theme='light'] nav a:hover {
+    color: #c9a050 !important;
+}
