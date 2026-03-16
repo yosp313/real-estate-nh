@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Services\Exceptions\DuplicateReservationException;
-use App\Services\Exceptions\ReservationUnavailableException;
 use App\Services\ReservationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,13 +30,7 @@ class ReservationController extends Controller
             'email.unique' => __('messages.already_registered'),
         ]);
 
-        try {
-            $this->reservationService->createReservation($project, $validated);
-        } catch (ReservationUnavailableException) {
-            return back()->withErrors(['project' => __('messages.project_unavailable')]);
-        } catch (DuplicateReservationException) {
-            return back()->withErrors(['email' => __('messages.already_registered')]);
-        }
+        $this->reservationService->createReservation($project, $validated);
 
         return back()->with('success', __('messages.registration_success'));
     }

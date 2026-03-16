@@ -1,5 +1,5 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 interface Project {
@@ -35,37 +35,71 @@ interface SharedProps {
     translations: Record<string, string>;
     availableLocales: string[];
     localeNames: Record<string, string>;
+    flash?: { success?: string | null; error?: string | null };
     [key: string]: unknown;
 }
 
 export default function Show({ project, relatedProjects }: Props) {
-    const { locale, translations: t, availableLocales, localeNames } = usePage<SharedProps>().props;
+    const { locale, translations: t, availableLocales, localeNames, flash } = usePage<SharedProps>().props;
     const isRTL = locale === 'ar';
+    const lastSuccessToastRef = useRef<string | null>(null);
+    const lastFlashErrorToastRef = useRef<string | null>(null);
+    const lastValidationErrorToastRef = useRef<string | null>(null);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         phone: '',
     });
 
-    // Show error toast for duplicate email
     useEffect(() => {
-        if (errors.email) {
-            toast.error(errors.email, {
-                duration: 4000,
-                position: 'top-center',
-            });
+        const successMessage = flash?.success;
+
+        if (!successMessage || lastSuccessToastRef.current === successMessage) {
+            return;
         }
-    }, [errors.email]);
+
+        toast.success(successMessage, {
+            duration: 5000,
+            position: 'top-center',
+            icon: '✅',
+        });
+        lastSuccessToastRef.current = successMessage;
+    }, [flash?.success]);
 
     useEffect(() => {
-        const projectError = (errors as Record<string, string>).project;
+        const errorMessage = flash?.error;
 
-        if (projectError) {
-            toast.error(projectError, {
-                duration: 4000,
-                position: 'top-center',
-            });
+        if (!errorMessage || lastFlashErrorToastRef.current === errorMessage) {
+            return;
         }
+
+        toast.error(errorMessage, {
+            duration: 5000,
+            position: 'top-center',
+        });
+        lastFlashErrorToastRef.current = errorMessage;
+    }, [flash?.error]);
+
+    useEffect(() => {
+        const messages = Object.values(errors).filter((message): message is string => typeof message === 'string' && message.length > 0);
+
+        if (messages.length === 0) {
+            lastValidationErrorToastRef.current = null;
+
+            return;
+        }
+
+        const signature = messages.join('|');
+
+        if (lastValidationErrorToastRef.current === signature) {
+            return;
+        }
+
+        toast.error(messages[0], {
+            duration: 5000,
+            position: 'top-center',
+        });
+        lastValidationErrorToastRef.current = signature;
     }, [errors]);
 
     const handleSubmit: FormEventHandler = (e) => {
@@ -73,11 +107,6 @@ export default function Show({ project, relatedProjects }: Props) {
         post(`/project/${project.slug}/reserve`, {
             onSuccess: () => {
                 reset();
-                toast.success(t.registration_success, {
-                    duration: 5000,
-                    position: 'top-center',
-                    icon: '🎉',
-                });
             },
             preserveScroll: true,
         });

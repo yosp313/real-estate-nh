@@ -29,6 +29,6 @@ class ContactController extends Controller
 
         $this->contactService->createContact($validated);
 
-        return back()->with('success', true);
+        return back()->with('success', __('messages.contact_success'));
     }
 }

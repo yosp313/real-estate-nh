@@ -19,7 +19,7 @@ class ContactControllerTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        $response->assertSessionHas('success', true);
+        $response->assertSessionHas('success', __('messages.contact_success'));
 
         $this->assertDatabaseHas('contacts', [
             'email' => 'john@example.com',
