@@ -25,3 +25,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# GSD planning docs (local only)
+.planning/
