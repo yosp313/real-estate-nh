@@ -25,7 +25,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => true,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1600&q=80',
             ],
             [
                 'slug' => 'asaad-compound',
@@ -39,7 +39,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => true,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80',
             ],
             [
                 'slug' => 'al-nader-palace',
@@ -53,7 +53,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80',
             ],
             [
                 'slug' => 'al-nader-building',
@@ -67,7 +67,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80',
             ],
             [
                 'slug' => 'al-nader-tower-1',
@@ -81,7 +81,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=1600&q=80',
             ],
             [
                 'slug' => 'al-nader-tower-2',
@@ -95,7 +95,7 @@ class ProjectSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1499916078039-922301b0eb9b?w=1600&q=80',
             ],
             [
                 'slug' => 'middle-east-tower',
@@ -109,12 +109,12 @@ class ProjectSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'available',
                 'price_starts_at' => null,
-                'image_url' => null,
+                'image_url' => 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=1600&q=80',
             ],
         ];
 
         foreach ($projects as $project) {
-            Project::create($project);
+            Project::updateOrCreate(['slug' => $project['slug']], $project);
         }
     }
 }
