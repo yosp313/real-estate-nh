@@ -19,7 +19,7 @@ return [
     'register' => 'إنشاء حساب',
     'english' => 'الإنجليزية',
     'arabic' => 'العربية',
-    'theme_toggle_dark'  => 'داكن',
+    'theme_toggle_dark' => 'داكن',
     'theme_toggle_light' => 'فاتح',
     'theme_toggle_label' => 'تبديل المظهر',
 
