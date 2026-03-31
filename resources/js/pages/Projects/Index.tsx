@@ -419,7 +419,7 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                 <Link
                                     key={project.id}
                                     href={`/project/${project.slug}`}
-                                    className="animate-on-scroll group relative cursor-pointer overflow-hidden bg-white shadow-sm transition-all duration-500 hover:shadow-2xl"
+                                    className="animate-on-scroll group relative flex cursor-pointer flex-col overflow-hidden bg-white shadow-sm transition-all duration-500 hover:shadow-2xl"
                                     data-delay={i % 3}
                                 >
                                     <div className="relative aspect-[4/5] overflow-hidden">
@@ -428,8 +428,8 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                             alt={project.name}
                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         />
-                                        {/* Overlapping price badge */}
-                                        <div className="absolute right-4 -bottom-5 z-10 rounded-sm bg-[#c9a050] px-4 py-2 text-sm font-bold text-white shadow-lg">
+                                        {/* Price badge — anchored inside image at bottom */}
+                                        <div className="absolute right-4 bottom-4 z-10 rounded-sm bg-[#c9a050] px-4 py-2 text-sm font-bold text-white shadow-lg">
                                             {t.from} ${project.price_starts_at}
                                         </div>
                                         {project.is_featured && (
@@ -440,40 +440,42 @@ export default function Index({ projects, allProjects, propertyTypes, filters }:
                                     </div>
                                     {/* Gold border reveal from bottom on hover */}
                                     <div className="absolute right-0 bottom-0 left-0 h-[2px] origin-left scale-x-0 bg-[#c9a050] transition-transform duration-500 group-hover:scale-x-100"></div>
-                                    <div className="p-6 pt-8">
+                                    <div className="flex flex-1 flex-col p-6">
                                         <h3 className="mb-2 font-serif text-xl font-bold text-gray-900 transition-colors duration-200 group-hover:text-[#9a7830]">
                                             {project.name}
                                         </h3>
                                         <p className="mb-4 text-xs text-gray-400">{project.location}</p>
-                                        <div className="mb-4 flex items-center gap-5 text-sm text-gray-500">
-                                            {project.bedrooms !== null && (
-                                                <span className="flex items-center gap-1.5">
-                                                    <svg className="h-4 w-4 text-[#c9a050]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={1.5}
-                                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                                        />
-                                                    </svg>
-                                                    {project.bedrooms} {t.bedrooms}
-                                                </span>
-                                            )}
-                                            {project.area_sqm && (
-                                                <span className="flex items-center gap-1.5">
-                                                    <svg className="h-4 w-4 text-[#c9a050]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={1.5}
-                                                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                                                        />
-                                                    </svg>
-                                                    {project.area_sqm} {t.sqm}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="flex items-center gap-2 text-[#b8923a]">
+                                        {(project.bedrooms !== null || project.area_sqm) && (
+                                            <div className="mb-4 flex items-center gap-5 text-sm text-gray-500">
+                                                {project.bedrooms !== null && (
+                                                    <span className="flex items-center gap-1.5">
+                                                        <svg className="h-4 w-4 text-[#c9a050]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={1.5}
+                                                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                                            />
+                                                        </svg>
+                                                        {project.bedrooms} {t.bedrooms}
+                                                    </span>
+                                                )}
+                                                {project.area_sqm && (
+                                                    <span className="flex items-center gap-1.5">
+                                                        <svg className="h-4 w-4 text-[#c9a050]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={1.5}
+                                                                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                                                            />
+                                                        </svg>
+                                                        {project.area_sqm} {t.sqm}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+                                        <div className="mt-auto flex items-center gap-2 text-[#b8923a]">
                                             <span className="text-xs font-semibold tracking-wider uppercase">{t.read_more}</span>
                                             <svg
                                                 className={`h-3 w-3 transition-transform duration-300 group-hover:translate-x-1 ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`}
