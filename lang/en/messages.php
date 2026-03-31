@@ -58,8 +58,17 @@ return [
 
     // About Section
     'about_nh' => 'About Us',
-    'about_title' => 'Al-Nader Holding Group',
-    'about_description' => 'Al-Nader Holding Group is one of the leading companies in real estate development in Egypt and the Middle East. With extensive experience in this field, we have a proven track record of achievements over many years, during which we have developed millions of square meters of land and sold thousands of real estate units.',
+    'about_title' => 'Al-Nader Real Estate Investment, Contracting and Trading Company',
+    'about_description' => 'Al-Nader Real Estate Investment, Contracting and Trading Company was established in 2010 in accordance with the provisions of the Law of 1981. We are a company specializing in real estate development that is sure that success and continued creativity depends on the practice of working with advanced professional foundations and that achieving leadership is impossible without achieving mutual trust between the client and the company.',
+    'about_success_heading' => 'Company Success Factors',
+    'about_success_1_title' => 'Specialized Leadership Management',
+    'about_success_1_desc' => 'A specialized leadership management body with high managerial and leadership skills. The Administrative Organ includes selected specializations starting with the Board of Directors, Accountants, Legal Advisory, Team of Engineers, Security Advisor and Distinguished Team for Customer Service and Real Estate Marketing.',
+    'about_success_2_title' => 'Integrated Market Research',
+    'about_success_2_desc' => 'Establishment of work on results of integrated market research for real estate investment. Places are carefully selected and studied to provide outstanding housing service in high-end locations that provide the customer with luxury and psychological comfort, with attention to shops, banks, medical centers, pharmacies, nurseries, gyms, green spaces and family seating areas.',
+    'about_success_3_title' => 'Security',
+    'about_success_3_desc' => 'The presence of security and security personnel at a high level of efficiency and expertise to secure the residential communities, towers and buildings. State-of-the-art CCTV systems securing all entrances in a specialized security style, with control and organization of movement in residential gatherings.',
+    'about_success_4_title' => 'Quality Standards',
+    'about_success_4_desc' => 'The company is unique in choosing what is new, whether in terms of unique designs, colors and modern materials, in accordance with all tastes. The company provides full finishing service according to the latest international designs and the finest materials at an unparalleled price.',
     'read_more' => 'Read More',
 
     // Services Section
@@ -96,6 +105,11 @@ return [
     'your_message' => 'Your Message',
     'your_phone' => 'Your Phone',
     'send_message' => 'Send Message',
+
+    'contact_phone' => '012 7777 8917',
+    'contact_email' => 'elnadercomapany@yahoo.com',
+    'contact_address' => 'Future Garden Compound, Extension of 23 (Army) Street, Al-Mustaqbal, Faisal, Suez',
+    'contact_tagline' => 'Because you deserve... the best',
 
     // Footer
     'navigation' => 'Navigation',
