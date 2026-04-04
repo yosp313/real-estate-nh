@@ -41,6 +41,23 @@ class ProjectControllerTest extends TestCase
         );
     }
 
+    public function test_it_filters_projects_on_listing_page(): void
+    {
+        $villa = $this->createProject('listing-villa', 'villa', 220);
+        $this->createProject('listing-studio', 'studio', 60);
+
+        $response = $this->get('/projects?type=villa&min_area=200');
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Projects/Listing')
+            ->where('filters.type', 'villa')
+            ->where('filters.min_area', '200')
+            ->has('projects', 1)
+            ->where('projects.0.slug', $villa->slug)
+        );
+    }
+
     private function createProject(string $slug, string $type, int $area): Project
     {
         return Project::create([

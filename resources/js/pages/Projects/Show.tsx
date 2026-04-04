@@ -376,7 +376,7 @@ export default function Show({ project, relatedProjects }: Props) {
                         {/* Back link */}
                         <div className="mt-16 text-center">
                             <Link
-                                href="/"
+                                href="/projects"
                                 className="group inline-flex cursor-pointer items-center gap-2 text-xs font-bold tracking-[0.2em] text-white/30 uppercase transition-colors duration-200 hover:text-[#c9a050]"
                             >
                                 <svg
@@ -388,7 +388,7 @@ export default function Show({ project, relatedProjects }: Props) {
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                 </svg>
-                                {t.home}
+                                {t.back_to_properties}
                             </Link>
                         </div>
                     </div>

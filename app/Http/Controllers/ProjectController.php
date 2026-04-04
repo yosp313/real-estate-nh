@@ -21,6 +21,14 @@ class ProjectController extends Controller
     }
 
     /**
+     * Display the projects listing page.
+     */
+    public function listing(Request $request): Response
+    {
+        return Inertia::render('Projects/Listing', $this->projectService->getIndexData($request->query()));
+    }
+
+    /**
      * Display a specific project's detail page.
      */
     public function show(Project $project): Response

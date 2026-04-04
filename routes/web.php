@@ -12,6 +12,9 @@ Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('lo
 // The Home Page (Gallery)
 Route::get('/', [ProjectController::class, 'index'])->name('home');
 
+// Projects Listing
+Route::get('/projects', [ProjectController::class, 'listing'])->name('projects.index');
+
 // Contact Form Submission
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:10,1')

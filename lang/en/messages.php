@@ -30,6 +30,7 @@ return [
 
     // Homepage Hero
     'page_title' => 'Al-Nader | Real Estate Investment, Trade & Contracting',
+    'page_title_projects' => 'Projects | Al-Nader Real Estate',
     'hero_title' => 'Now you can reserve your unit online',
     'hero_subtitle' => 'With Al-Nader Group',
     'search_your_unit' => 'Search for your unit',

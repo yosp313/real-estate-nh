@@ -30,6 +30,7 @@ return [
 
     // Homepage Hero
     'page_title' => 'النادر | للاستثمار العقاري و التجارة و المقاولات',
+    'page_title_projects' => 'المشاريع | النادر للعقارات',
     'hero_title' => 'الآن يمكنك حجز وحدتك أونلاين',
     'hero_subtitle' => 'مع مجموعة النادر',
     'search_your_unit' => 'ابحث على وحدتك',

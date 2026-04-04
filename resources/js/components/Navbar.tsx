@@ -24,7 +24,7 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                     <div className="hidden items-center gap-8 md:flex">
                         {[
                             { href: '/', label: t.home, isLink: true },
-                            { href: '#projects', label: t.properties, isLink: false },
+                            { href: '/projects', label: t.properties, isLink: true },
                             { href: '#about', label: t.about, isLink: false },
                             { href: '#contact', label: t.contact, isLink: false },
                         ].map((item) =>
