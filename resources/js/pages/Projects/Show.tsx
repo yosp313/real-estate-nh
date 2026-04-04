@@ -54,56 +54,30 @@ export default function Show({ project, relatedProjects }: Props) {
 
     useEffect(() => {
         const successMessage = flash?.success;
-
-        if (!successMessage || lastSuccessToastRef.current === successMessage) {
-            return;
-        }
-
-        toast.success(successMessage, {
-            duration: 5000,
-            position: 'top-center',
-            icon: '\u2705',
-        });
+        if (!successMessage || lastSuccessToastRef.current === successMessage) return;
+        toast.success(successMessage, { duration: 5000, position: 'top-center' });
         lastSuccessToastRef.current = successMessage;
     }, [flash?.success]);
 
     useEffect(() => {
         const errorMessage = flash?.error;
-
-        if (!errorMessage || lastFlashErrorToastRef.current === errorMessage) {
-            return;
-        }
-
-        toast.error(errorMessage, {
-            duration: 5000,
-            position: 'top-center',
-        });
+        if (!errorMessage || lastFlashErrorToastRef.current === errorMessage) return;
+        toast.error(errorMessage, { duration: 5000, position: 'top-center' });
         lastFlashErrorToastRef.current = errorMessage;
     }, [flash?.error]);
 
     useEffect(() => {
-        const messages = Object.values(errors).filter((message): message is string => typeof message === 'string' && message.length > 0);
-
+        const messages = Object.values(errors).filter((m): m is string => typeof m === 'string' && m.length > 0);
         if (messages.length === 0) {
             lastValidationErrorToastRef.current = null;
-
             return;
         }
-
         const signature = messages.join('|');
-
-        if (lastValidationErrorToastRef.current === signature) {
-            return;
-        }
-
-        toast.error(messages[0], {
-            duration: 5000,
-            position: 'top-center',
-        });
+        if (lastValidationErrorToastRef.current === signature) return;
+        toast.error(messages[0], { duration: 5000, position: 'top-center' });
         lastValidationErrorToastRef.current = signature;
     }, [errors]);
 
-    // Scroll-triggered animation observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -114,12 +88,10 @@ export default function Show({ project, relatedProjects }: Props) {
                     }
                 });
             },
-            { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
+            { threshold: 0.08, rootMargin: '0px 0px -30px 0px' },
         );
-
         const elements = document.querySelectorAll('.animate-on-scroll, .animate-scale-reveal');
         elements.forEach((el) => observer.observe(el));
-
         return () => observer.disconnect();
     }, [project]);
 
@@ -139,40 +111,35 @@ export default function Show({ project, relatedProjects }: Props) {
             <Toaster
                 toastOptions={{
                     style: {
-                        background: '#1a1a1a',
+                        background: '#111111',
                         color: '#ffffff',
-                        border: '1px solid #c9a050',
-                        fontFamily: "'DM Sans', system-ui, sans-serif",
+                        border: '1px solid rgba(201,160,80,0.4)',
+                        fontFamily: "'Josefin Sans', system-ui, sans-serif",
+                        fontSize: '13px',
+                        letterSpacing: '0.04em',
                     },
-                    success: {
-                        iconTheme: {
-                            primary: '#c9a050',
-                            secondary: '#1a1a1a',
-                        },
-                    },
-                    error: {
-                        iconTheme: {
-                            primary: '#dc2626',
-                            secondary: '#ffffff',
-                        },
-                    },
+                    success: { iconTheme: { primary: '#c9a050', secondary: '#111111' } },
+                    error: { iconTheme: { primary: '#dc2626', secondary: '#ffffff' } },
                 }}
             />
 
-            <div className={`grain-overlay min-h-screen bg-[#080808] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+            <div className={`grain-overlay min-h-screen bg-[#0a0a0a] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
                 {/* ─── Navigation ─── */}
                 <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
-                {/* ─── Hero Image ─── */}
-                <section className="animate-on-scroll relative pt-20">
-                    <div className="relative aspect-[21/9] max-h-[60vh] w-full overflow-hidden">
+                {/* ─── Hero Banner ─── */}
+                <section className="animate-on-scroll relative pt-24">
+                    <div className="relative w-full overflow-hidden" style={{ maxHeight: '65vh', aspectRatio: '21/9' }}>
                         <img src={project.image_url} alt={project.name} className="h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/20 to-transparent"></div>
-                        {/* Floating price tag */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/15 to-transparent" />
+
+                        {/* Price tag */}
                         <div className="absolute right-6 bottom-8 md:right-12 md:bottom-12">
-                            <div className="rounded-sm bg-[#c9a050] px-6 py-3 shadow-lg shadow-[#c9a050]/20">
-                                <p className="text-[10px] font-bold tracking-[0.2em] text-[#080808]/50 uppercase">{t.starting_from}</p>
-                                <p className="font-serif text-2xl font-bold text-[#080808]">${project.price_starts_at}</p>
+                            <div className="relative bg-[#c9a050] px-6 py-4 shadow-2xl shadow-[#c9a050]/20">
+                                <div className="geo-corner geo-corner-tl absolute" />
+                                <div className="geo-corner geo-corner-br absolute" />
+                                <p className="text-[9px] font-bold tracking-[0.25em] text-[#0a0a0a]/50 uppercase">{t.starting_from}</p>
+                                <p className="mt-1 font-serif text-2xl font-bold text-[#0a0a0a]">${project.price_starts_at}</p>
                             </div>
                         </div>
                     </div>
@@ -182,27 +149,56 @@ export default function Show({ project, relatedProjects }: Props) {
                 <main className="relative py-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <div className="grid gap-16 lg:grid-cols-5">
-                            {/* Left Column: Project Details */}
-                            <div className="space-y-10 lg:col-span-3">
-                                {/* Project Title */}
+                            {/* Left: Project Details */}
+                            <div className="space-y-12 lg:col-span-3">
+                                {/* Title */}
                                 <div className="animate-on-scroll">
-                                    <div className="mb-4 flex items-center gap-3">
-                                        <div className="h-px w-10 bg-[#c9a050]"></div>
-                                        <span className="text-[10px] font-semibold tracking-[0.3em] text-[#c9a050] uppercase">
+                                    <div className={`mb-5 flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                        <div className="h-px w-8 bg-[#c9a050]" />
+                                        <span className="text-[10px] font-bold tracking-[0.3em] text-[#c9a050] uppercase">
                                             {t[project.type] || project.type}
                                         </span>
                                     </div>
-                                    <h1 className="font-serif text-4xl font-bold text-white md:text-5xl">{project.name}</h1>
-                                    {project.location && <p className="mt-3 text-sm text-white/30">{project.location}</p>}
+                                    <h1
+                                        className="font-serif font-bold text-white"
+                                        style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)', lineHeight: 1.1 }}
+                                    >
+                                        {project.name}
+                                    </h1>
+                                    {project.location && (
+                                        <p className="mt-3 flex items-center gap-2 text-sm text-white/35">
+                                            <svg
+                                                className="h-4 w-4 text-[#c9a050]/50"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={1.5}
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={1.5}
+                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                            </svg>
+                                            {project.location}
+                                        </p>
+                                    )}
                                 </div>
 
-                                {/* Property Details Grid */}
+                                {/* Property Specs Grid */}
                                 <div className="animate-on-scroll" data-delay="1">
-                                    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                                         {project.location && (
                                             <div className="relative border border-[#c9a050]/10 bg-[#0d0d0d] p-5">
-                                                <div className="absolute top-0 left-0 h-4 w-4 border-t border-l border-[#c9a050]/30"></div>
-                                                <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase">
+                                                <div className="geo-corner geo-corner-tl absolute" />
+                                                <p className="mb-2 text-[9px] font-bold tracking-[0.22em] text-white/25 uppercase">
                                                     {t.property_location}
                                                 </p>
                                                 <p className="text-sm font-medium text-white">{project.location}</p>
@@ -210,8 +206,8 @@ export default function Show({ project, relatedProjects }: Props) {
                                         )}
                                         {project.type && (
                                             <div className="relative border border-[#c9a050]/10 bg-[#0d0d0d] p-5">
-                                                <div className="absolute top-0 left-0 h-4 w-4 border-t border-l border-[#c9a050]/30"></div>
-                                                <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase">
+                                                <div className="geo-corner geo-corner-tl absolute" />
+                                                <p className="mb-2 text-[9px] font-bold tracking-[0.22em] text-white/25 uppercase">
                                                     {t.property_type}
                                                 </p>
                                                 <p className="text-sm font-medium text-white capitalize">{t[project.type] || project.type}</p>
@@ -219,8 +215,8 @@ export default function Show({ project, relatedProjects }: Props) {
                                         )}
                                         {project.area_sqm && (
                                             <div className="relative border border-[#c9a050]/10 bg-[#0d0d0d] p-5">
-                                                <div className="absolute top-0 left-0 h-4 w-4 border-t border-l border-[#c9a050]/30"></div>
-                                                <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase">{t.area_size}</p>
+                                                <div className="geo-corner geo-corner-tl absolute" />
+                                                <p className="mb-2 text-[9px] font-bold tracking-[0.22em] text-white/25 uppercase">{t.area_size}</p>
                                                 <p className="text-sm font-medium text-white">
                                                     {project.area_sqm} {t.sqm}
                                                 </p>
@@ -228,15 +224,15 @@ export default function Show({ project, relatedProjects }: Props) {
                                         )}
                                         {project.bedrooms !== null && (
                                             <div className="relative border border-[#c9a050]/10 bg-[#0d0d0d] p-5">
-                                                <div className="absolute top-0 left-0 h-4 w-4 border-t border-l border-[#c9a050]/30"></div>
-                                                <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase">{t.bedrooms}</p>
+                                                <div className="geo-corner geo-corner-tl absolute" />
+                                                <p className="mb-2 text-[9px] font-bold tracking-[0.22em] text-white/25 uppercase">{t.bedrooms}</p>
                                                 <p className="text-sm font-medium text-white">{project.bedrooms}</p>
                                             </div>
                                         )}
                                         {project.bathrooms !== null && (
                                             <div className="relative border border-[#c9a050]/10 bg-[#0d0d0d] p-5">
-                                                <div className="absolute top-0 left-0 h-4 w-4 border-t border-l border-[#c9a050]/30"></div>
-                                                <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase">{t.bathrooms}</p>
+                                                <div className="geo-corner geo-corner-tl absolute" />
+                                                <p className="mb-2 text-[9px] font-bold tracking-[0.22em] text-white/25 uppercase">{t.bathrooms}</p>
                                                 <p className="text-sm font-medium text-white">{project.bathrooms}</p>
                                             </div>
                                         )}
@@ -245,112 +241,93 @@ export default function Show({ project, relatedProjects }: Props) {
 
                                 {/* Description */}
                                 <div className="animate-on-scroll" data-delay="2">
-                                    <div className="border-t border-[#c9a050]/10 pt-10">
-                                        <div className="mb-6 flex items-center gap-3">
-                                            <div className="h-px w-10 bg-[#c9a050]/40"></div>
-                                            <h2 className="text-[10px] font-bold tracking-[0.2em] text-[#c9a050] uppercase">{t.description}</h2>
+                                    <div className="border-t border-[#c9a050]/8 pt-10">
+                                        <div className={`mb-5 flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                            <div className="h-px w-8 bg-[#c9a050]/40" />
+                                            <h2 className="text-[10px] font-bold tracking-[0.25em] text-[#c9a050] uppercase">{t.description}</h2>
                                         </div>
-                                        <p className="max-w-2xl font-serif text-base leading-[2.2] whitespace-pre-line text-white/60">
-                                            {project.description}
-                                        </p>
+                                        <p className="max-w-2xl text-sm leading-[2.2] whitespace-pre-line text-white/50">{project.description}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right Column: Registration Form */}
-                            <div className="lg:sticky lg:top-24 lg:col-span-2 lg:self-start">
-                                <div className="animate-on-scroll overflow-hidden border border-[#c9a050]/10" data-delay="1">
-                                    {/* Gold header band */}
+                            {/* Right: Reservation Form */}
+                            <div className="lg:sticky lg:top-28 lg:col-span-2 lg:self-start">
+                                <div className="animate-on-scroll overflow-hidden border border-[#c9a050]/12" data-delay="1">
+                                    {/* Form header */}
                                     <div className="geo-pattern-dark bg-[#c9a050] px-8 py-6">
-                                        <h2 className="font-serif text-xl font-bold text-[#080808]">{t.inquire_now}</h2>
-                                        <p className="mt-1 text-xs text-[#080808]/60">{t.inquire_desc}</p>
+                                        <h2 className="font-serif text-xl font-bold tracking-wide text-[#0a0a0a]">{t.inquire_now}</h2>
+                                        <p className="mt-1 text-xs text-[#0a0a0a]/55">{t.inquire_desc}</p>
                                     </div>
 
                                     {/* Form body */}
                                     <div className="bg-[#0d0d0d] p-8">
                                         <form onSubmit={handleSubmit} className="space-y-7">
-                                            {/* Name Field */}
                                             <div>
                                                 <label
-                                                    htmlFor="name"
-                                                    className="mb-3 block text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase"
+                                                    htmlFor="reserve-name"
+                                                    className="mb-3 block text-[9px] font-bold tracking-[0.25em] text-white/25 uppercase"
                                                 >
                                                     {t.full_name}
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    id="name"
+                                                    id="reserve-name"
                                                     value={data.name}
                                                     onChange={(e) => setData('name', e.target.value)}
-                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors focus:outline-none ${
-                                                        errors.name
-                                                            ? 'border-red-500 focus:border-red-500'
-                                                            : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                    }`}
+                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors placeholder:text-white/20 focus:outline-none ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-[#2a2a2a] focus:border-[#c9a050]'}`}
                                                     placeholder={t.your_name}
                                                 />
-                                                {errors.name && <p className="mt-2 text-xs text-red-500">{errors.name}</p>}
+                                                {errors.name && <p className="mt-1.5 text-xs text-red-500">{errors.name}</p>}
                                             </div>
 
-                                            {/* Email Field */}
                                             <div>
                                                 <label
-                                                    htmlFor="email"
-                                                    className="mb-3 block text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase"
+                                                    htmlFor="reserve-email"
+                                                    className="mb-3 block text-[9px] font-bold tracking-[0.25em] text-white/25 uppercase"
                                                 >
                                                     {t.email_address}
                                                 </label>
                                                 <input
                                                     type="email"
-                                                    id="email"
+                                                    id="reserve-email"
                                                     value={data.email}
                                                     onChange={(e) => setData('email', e.target.value)}
-                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors focus:outline-none ${
-                                                        errors.email
-                                                            ? 'border-red-500 focus:border-red-500'
-                                                            : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                    }`}
+                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors placeholder:text-white/20 focus:outline-none ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#2a2a2a] focus:border-[#c9a050]'}`}
                                                     placeholder={t.your_email}
                                                 />
-                                                {errors.email && <p className="mt-2 text-xs text-red-500">{errors.email}</p>}
+                                                {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
                                             </div>
 
-                                            {/* Phone Field */}
                                             <div>
                                                 <label
-                                                    htmlFor="phone"
-                                                    className="mb-3 block text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase"
+                                                    htmlFor="reserve-phone"
+                                                    className="mb-3 block text-[9px] font-bold tracking-[0.25em] text-white/25 uppercase"
                                                 >
                                                     {t.phone_number}
                                                 </label>
                                                 <input
                                                     type="tel"
-                                                    id="phone"
+                                                    id="reserve-phone"
                                                     value={data.phone}
                                                     onChange={(e) => setData('phone', e.target.value)}
-                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors focus:outline-none ${
-                                                        errors.phone
-                                                            ? 'border-red-500 focus:border-red-500'
-                                                            : 'border-[#3d3d3d] focus:border-[#c9a050]'
-                                                    }`}
+                                                    className={`block w-full border-b bg-transparent px-0 py-3 text-sm text-white transition-colors placeholder:text-white/20 focus:outline-none ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#2a2a2a] focus:border-[#c9a050]'}`}
                                                     placeholder={t.phone_number}
                                                 />
-                                                {errors.phone && <p className="mt-2 text-xs text-red-500">{errors.phone}</p>}
+                                                {errors.phone && <p className="mt-1.5 text-xs text-red-500">{errors.phone}</p>}
                                             </div>
 
-                                            {/* Submit Button */}
                                             <button
                                                 type="submit"
                                                 disabled={processing}
-                                                className="btn-gold mt-4 w-full cursor-pointer rounded-sm px-6 py-4 text-sm font-bold tracking-wider text-white uppercase disabled:cursor-not-allowed disabled:opacity-50"
+                                                className="btn-gold mt-2 w-full cursor-pointer px-6 py-4 text-xs font-bold uppercase disabled:cursor-not-allowed disabled:opacity-50"
                                             >
-                                                {processing ? t.sending + '...' : t.submit_inquiry}
+                                                {processing ? `${t.sending}...` : t.submit_inquiry}
                                             </button>
                                         </form>
 
-                                        {/* Privacy Note */}
-                                        <div className="mt-8 border-t border-white/5 pt-6">
-                                            <p className="text-[11px] leading-relaxed text-white/20">{t.privacy_note}</p>
+                                        <div className="mt-7 border-t border-white/5 pt-6">
+                                            <p className="text-[11px] leading-relaxed text-white/18">{t.privacy_note}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -359,35 +336,34 @@ export default function Show({ project, relatedProjects }: Props) {
 
                         {/* ─── Related Properties ─── */}
                         {relatedProjects && relatedProjects.length > 0 && (
-                            <div className="mt-24">
-                                <div className="animate-on-scroll mb-10 flex items-center gap-4">
-                                    <div className="h-px flex-1 bg-gradient-to-r from-[#c9a050]/20 to-transparent"></div>
+                            <div className="mt-28">
+                                <div className="animate-on-scroll mb-12 flex items-center gap-4">
+                                    <div className="h-px flex-1 bg-gradient-to-r from-[#c9a050]/15 to-transparent" />
                                     <h2 className="font-serif text-2xl font-bold text-white">{t.related_properties}</h2>
-                                    <div className="h-px flex-1 bg-gradient-to-l from-[#c9a050]/20 to-transparent"></div>
+                                    <div className="h-px flex-1 bg-gradient-to-l from-[#c9a050]/15 to-transparent" />
                                 </div>
 
-                                {/* Horizontal scroll on mobile, grid on desktop */}
                                 <div className="flex gap-6 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
                                     {relatedProjects.map((related, i) => (
                                         <Link
                                             key={related.id}
                                             href={`/project/${related.slug}`}
-                                            className="animate-on-scroll group min-w-[260px] overflow-hidden border border-[#c9a050]/10 bg-[#0d0d0d] transition-all duration-500 hover:border-[#c9a050]/30 md:min-w-0"
+                                            className="animate-on-scroll group min-w-[260px] cursor-pointer overflow-hidden border border-[#c9a050]/8 bg-[#0d0d0d] transition-all duration-300 hover:border-[#c9a050]/30 md:min-w-0"
                                             data-delay={i}
                                         >
                                             <div className="relative aspect-[4/3] overflow-hidden">
                                                 <img
                                                     src={related.image_url}
                                                     alt={related.name}
-                                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    className="h-full w-full object-cover transition-transform duration-600 group-hover:scale-105"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-[#080808]/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                                             </div>
                                             <div className="p-5">
-                                                <h3 className="mb-1 font-serif font-medium text-white transition-colors group-hover:text-[#c9a050]">
+                                                <h3 className="mb-1 font-serif font-semibold text-white transition-colors duration-150 group-hover:text-[#c9a050]">
                                                     {related.name}
                                                 </h3>
-                                                <p className="text-sm text-[#c9a050]/70">
+                                                <p className="text-sm text-[#c9a050]/60">
                                                     {t.from} ${related.price_starts_at}
                                                 </p>
                                             </div>
@@ -396,6 +372,25 @@ export default function Show({ project, relatedProjects }: Props) {
                                 </div>
                             </div>
                         )}
+
+                        {/* Back link */}
+                        <div className="mt-16 text-center">
+                            <Link
+                                href="/"
+                                className="group inline-flex cursor-pointer items-center gap-2 text-xs font-bold tracking-[0.2em] text-white/30 uppercase transition-colors duration-200 hover:text-[#c9a050]"
+                            >
+                                <svg
+                                    className={`h-3 w-3 transition-transform duration-200 group-hover:-translate-x-1 ${isRTL ? 'rotate-180 group-hover:translate-x-1' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                {t.home}
+                            </Link>
+                        </div>
                     </div>
                 </main>
             </div>

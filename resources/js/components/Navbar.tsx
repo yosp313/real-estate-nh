@@ -12,14 +12,16 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <nav className="fixed top-0 right-0 left-0 z-50 border-b border-[#c9a050]/10 bg-[#080808]/90 backdrop-blur-xl">
-            <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                <div className="flex h-20 items-center justify-between">
-                    <Link href="/" className="flex items-center gap-3">
-                        <div className="font-serif text-2xl font-bold tracking-wide text-[#c9a050]">{t.brand_name}</div>
+        <nav className="navbar-floating">
+            <div className="mx-auto max-w-7xl px-5 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                    {/* Brand */}
+                    <Link href="/" className="flex cursor-pointer items-center gap-2">
+                        <div className="font-serif text-xl font-bold tracking-widest text-[#c9a050] uppercase">{t.brand_name}</div>
                     </Link>
 
-                    <div className="hidden items-center gap-10 md:flex">
+                    {/* Nav Links */}
+                    <div className="hidden items-center gap-8 md:flex">
                         {[
                             { href: '/', label: t.home, isLink: true },
                             { href: '#projects', label: t.properties, isLink: false },
@@ -30,7 +32,7 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="hover-gold-underline text-sm font-medium tracking-widest text-white/90 uppercase transition-colors duration-300 hover:text-[#c9a050]"
+                                    className="hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/80 uppercase transition-colors duration-200 hover:text-[#c9a050]"
                                 >
                                     {item.label}
                                 </Link>
@@ -38,7 +40,7 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                                 <a
                                     key={item.href}
                                     href={item.href}
-                                    className="hover-gold-underline text-sm font-medium tracking-widest text-white/60 uppercase transition-colors duration-300 hover:text-[#c9a050]"
+                                    className="hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/50 uppercase transition-colors duration-200 hover:text-[#c9a050]"
                                 >
                                     {item.label}
                                 </a>
@@ -46,15 +48,17 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                         )}
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    {/* Right Controls */}
+                    <div className="flex items-center gap-3">
+                        {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
                             aria-label={t.theme_toggle_label}
                             title={t.theme_toggle_label}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c9a050]/20 text-white/60 transition-all duration-300 hover:border-[#c9a050]/50 hover:text-[#c9a050]"
+                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#c9a050]/20 text-white/50 transition-all duration-200 hover:border-[#c9a050]/60 hover:text-[#c9a050] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a050]/50"
                         >
                             {theme === 'dark' ? (
-                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
@@ -63,7 +67,7 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                                     />
                                 </svg>
                             ) : (
-                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
@@ -74,13 +78,14 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                             )}
                         </button>
 
+                        {/* Locale Switcher */}
                         <div className="flex items-center overflow-hidden rounded-full border border-[#c9a050]/20">
                             {availableLocales.map((loc) => (
                                 <Link
                                     key={loc}
                                     href={`/locale/${loc}`}
-                                    className={`cursor-pointer px-4 py-1.5 text-xs font-medium tracking-wider transition-all duration-300 ${
-                                        locale === loc ? 'bg-[#c9a050] font-semibold text-[#080808]' : 'text-white/50 hover:text-white'
+                                    className={`cursor-pointer px-3.5 py-1 text-[11px] font-semibold tracking-wider uppercase transition-all duration-200 ${
+                                        locale === loc ? 'bg-[#c9a050] text-[#0a0a0a]' : 'text-white/40 hover:text-white/80'
                                     }`}
                                 >
                                     {localeNames[loc]}

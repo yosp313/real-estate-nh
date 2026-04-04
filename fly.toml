@@ -3,7 +3,7 @@
 # First-time setup: fly launch --no-deploy, then fly deploy
 
 app = "al-nader-realestate"
-primary_region = "iad"
+primary_region = "fra"
 
 [build]
 
@@ -20,7 +20,7 @@ primary_region = "iad"
   LOG_LEVEL = "error"
   DB_CONNECTION = "sqlite"
   DB_DATABASE = "/var/www/html/database/database.sqlite"
-  SESSION_DRIVER = "file"
+  SESSION_DRIVER = "cookie"
   CACHE_STORE = "file"
   QUEUE_CONNECTION = "sync"
   FILESYSTEM_DISK = "local"
@@ -40,14 +40,14 @@ primary_region = "iad"
 
 [[vm]]
   size = "shared-cpu-1x"
-  memory = "512mb"
+  memory = "256mb"
   cpus = 1
 
 [[mounts]]
   source = "sqlite_data"
   destination = "/var/www/html/database"
   initial_size = "1gb"
-  snapshot_retention = 5
+  snapshot_retention = 2
 
 [[statics]]
   guest_path = "/var/www/html/public/build"
