@@ -85,9 +85,9 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # Copy custom PHP configuration
 COPY docker/php/php.ini "$PHP_INI_DIR/conf.d/99-custom.ini"
 
-# Copy nginx configuration
+# Copy nginx configuration (template for PORT substitution at runtime)
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
+COPY docker/nginx/default.conf.template /etc/nginx/http.d/default.conf.template
 
 # Copy supervisor configuration
 COPY docker/supervisor/supervisord.conf /etc/supervisord.conf

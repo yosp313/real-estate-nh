@@ -3,8 +3,8 @@
 # =============================================================================
 
 server {
-    listen ${PORT:-80};
-    listen [::]:${PORT:-80};
+    listen PORT_PLACEHOLDER;
+    listen [::]:PORT_PLACEHOLDER;
     server_name _;
 
     root /var/www/html/public;
