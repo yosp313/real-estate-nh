@@ -6,7 +6,7 @@ use App\Models\Project;
 use App\Models\Reservation;
 use App\Services\Exceptions\DuplicateReservationException;
 use App\Services\Exceptions\ReservationUnavailableException;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 class ReservationService
 {
@@ -26,12 +26,8 @@ class ReservationService
                 'customer_phone' => $data['phone'],
                 'status' => 'pending',
             ]);
-        } catch (QueryException $exception) {
-            if ((string) $exception->getCode() === '23000') {
-                throw new DuplicateReservationException(previous: $exception);
-            }
-
-            throw $exception;
+        } catch (UniqueConstraintViolationException $exception) {
+            throw new DuplicateReservationException(previous: $exception);
         }
     }
 }

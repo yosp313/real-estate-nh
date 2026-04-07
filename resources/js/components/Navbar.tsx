@@ -10,6 +10,8 @@ interface NavbarProps {
 
 export function Navbar({ locale, translations: t, availableLocales, localeNames }: NavbarProps) {
     const { theme, toggleTheme } = useTheme();
+    const navItemClass =
+        'hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/80 uppercase transition-colors duration-200 hover:text-[#c9a050]';
 
     return (
         <nav className="navbar-floating">
@@ -23,16 +25,16 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                     {/* Nav Links */}
                     <div className="hidden items-center gap-8 md:flex">
                         {[
-                            { href: '/', label: t.home, isLink: true },
-                            { href: '/projects', label: t.properties, isLink: true },
-                            { href: '#about', label: t.about, isLink: false },
-                            { href: '#contact', label: t.contact, isLink: false },
+                            { href: '/', label: t.home },
+                            { href: '/projects', label: t.properties },
+                            { href: '#about', label: t.about },
+                            { href: '#contact', label: t.contact },
                         ].map((item) =>
-                            item.isLink ? (
+                            item.href.startsWith('/') ? (
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/80 uppercase transition-colors duration-200 hover:text-[#c9a050]"
+                                    className={navItemClass}
                                 >
                                     {item.label}
                                 </Link>
@@ -40,7 +42,7 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                                 <a
                                     key={item.href}
                                     href={item.href}
-                                    className="hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/50 uppercase transition-colors duration-200 hover:text-[#c9a050]"
+                                    className={navItemClass}
                                 >
                                     {item.label}
                                 </a>
