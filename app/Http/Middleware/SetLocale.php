@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LocaleService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -19,7 +20,7 @@ class SetLocale
     {
         $locale = Session::get('locale', config('app.locale'));
 
-        if (in_array($locale, config('app.available_locales', ['en']))) {
+        if (LocaleService::isValidLocale($locale)) {
             App::setLocale($locale);
         }
 
