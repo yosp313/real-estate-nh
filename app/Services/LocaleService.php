@@ -18,9 +18,7 @@ class LocaleService
 
     public function setLocale(string $locale): void
     {
-        $availableLocales = config('app.available_locales', ['en']);
-
-        if (! in_array($locale, $availableLocales, true)) {
+        if (! self::isValidLocale($locale)) {
             throw new InvalidLocaleException;
         }
 
