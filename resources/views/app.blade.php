@@ -17,6 +17,14 @@
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         @inertiaHead
     </head>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || theme === 'light') {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        })();
+    </script>
     <body class="font-sans antialiased">
         @inertia
     </body>

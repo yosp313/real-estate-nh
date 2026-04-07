@@ -162,8 +162,8 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
                             className="h-full w-full object-cover"
                         />
                         {/* Cinematic gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent cinematic-gradient" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-transparent cinematic-gradient" />
                     </div>
 
                     {/* Corner accents */}

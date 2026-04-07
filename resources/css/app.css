@@ -488,6 +488,84 @@ input[type='range']::-moz-range-thumb {
     background-color: var(--theme-bg-primary) !important;
 }
 
+/* ───────────────────────────────────────────────
+   Dark Theme Defaults (applied when no data-theme or data-theme='dark')
+   ─────────────────────────────────────────────── */
+:root {
+    --theme-bg-primary: #0a0a0a;
+    --theme-bg-secondary: #111111;
+    --theme-bg-alt: #060606;
+    --theme-bg-card: #0d0d0d;
+    --theme-bg-input: transparent;
+    --theme-bg-nav: rgba(10, 10, 10, 0.88);
+    --theme-bg-section-cream: #faf7f2;
+    --theme-bg-section-cream-2: #f4ede0;
+    --theme-text-primary: #ffffff;
+    --theme-text-secondary: rgba(255, 255, 255, 0.5);
+    --theme-text-muted: rgba(255, 255, 255, 0.25);
+    --theme-text-dim: rgba(255, 255, 255, 0.35);
+    --theme-text-input: #ffffff;
+    --theme-placeholder: rgba(255, 255, 255, 0.2);
+    --theme-border: rgba(201, 160, 80, 0.1);
+    --theme-border-subtle: rgba(201, 160, 80, 0.08);
+    --theme-border-input: #2a2a2a;
+    --theme-overlay: #0a0a0a;
+    --theme-overlay-fade: rgba(10, 10, 10, 0.75);
+    --theme-gradient-cinematic: linear-gradient(to top, #0a0a0a, rgba(10, 10, 10, 0.3) to transparent);
+    --theme-geo-pattern-opacity: 0.03;
+}
+
+/* ───────────────────────────────────────────────
+   Light Theme Overrides
+   ─────────────────────────────────────────────── */
+[data-theme='light'] {
+    --theme-bg-primary: #faf7f2;
+    --theme-bg-secondary: #f4ede0;
+    --theme-bg-alt: #ffffff;
+    --theme-bg-card: #ffffff;
+    --theme-bg-input: transparent;
+    --theme-bg-nav: rgba(250, 247, 242, 0.92);
+    --theme-bg-section-cream: #faf7f2;
+    --theme-bg-section-cream-2: #f4ede0;
+    --theme-text-primary: #111111;
+    --theme-text-secondary: #6b6560;
+    --theme-text-muted: rgba(17, 17, 17, 0.25);
+    --theme-text-dim: rgba(17, 17, 17, 0.35);
+    --theme-text-input: #111111;
+    --theme-placeholder: rgba(17, 17, 17, 0.3);
+    --theme-border: rgba(201, 160, 80, 0.2);
+    --theme-border-subtle: rgba(201, 160, 80, 0.12);
+    --theme-border-input: #e8dcc8;
+    --theme-overlay: #ffffff;
+    --theme-overlay-fade: rgba(250, 247, 242, 0.75);
+    --theme-geo-pattern-opacity: 0.06;
+}
+
+/* ───────────────────────────────────────────────
+   Theme utility classes (use these in JSX instead of hardcoded hex)
+   ─────────────────────────────────────────────── */
+
+/* Backgrounds */
+.theme-bg-primary { background-color: var(--theme-bg-primary); }
+.theme-bg-secondary { background-color: var(--theme-bg-secondary); }
+.theme-bg-alt { background-color: var(--theme-bg-alt); }
+.theme-bg-card { background-color: var(--theme-bg-card); }
+
+/* Text */
+.theme-text-primary { color: var(--theme-text-primary); }
+.theme-text-secondary { color: var(--theme-text-secondary); }
+.theme-text-muted { color: var(--theme-text-muted); }
+.theme-text-dim { color: var(--theme-text-dim); }
+
+/* Borders */
+.theme-border { border-color: var(--theme-border); }
+.theme-border-subtle { border-color: var(--theme-border-subtle); }
+
+/* Light-theme-only overrides that need !important to override Tailwind hardcoded utilities */
+[data-theme='light'] .grain-overlay {
+    background-color: var(--theme-bg-primary) !important;
+}
+
 [data-theme='light'] .navbar-floating {
     background: rgba(250, 247, 242, 0.94) !important;
     border-color: rgba(201, 160, 80, 0.2) !important;
@@ -502,4 +580,247 @@ input[type='range']::-moz-range-thumb {
 
 [data-theme='light'] .navbar-floating a:hover {
     color: #c9a050 !important;
+}
+
+/* Light theme: hero cinematic gradient — use CSS class instead of Tailwind hardcoded */
+[data-theme='light'] .cinematic-gradient {
+    background: linear-gradient(to top, var(--theme-bg-primary), rgba(250, 247, 242, 0.15), transparent) !important;
+}
+
+/* Light theme: section backgrounds that are explicitly cream in dark mode */
+[data-theme='light'] .theme-section-cream {
+    background-color: var(--theme-bg-section-cream) !important;
+}
+
+[data-theme='light'] .theme-section-cream-2 {
+    background-color: var(--theme-bg-section-cream-2) !important;
+}
+
+/* Light theme: Toaster */
+[data-theme='light'] .toast-theme {
+    background: #ffffff !important;
+    color: #111111 !important;
+    border-color: rgba(201, 160, 80, 0.4) !important;
+}
+
+/* ───────────────────────────────────────────────
+   Comprehensive Theme Overrides (Light)
+   These override Tailwind hardcoded hex colors for pages that use them
+   ─────────────────────────────────────────────── */
+
+[data-theme='light'] .bg-\[\#0a0a0a\] {
+    background-color: var(--theme-bg-primary) !important;
+}
+
+[data-theme='light'] .bg-\[\#060606\] {
+    background-color: var(--theme-bg-alt) !important;
+}
+
+[data-theme='light'] .bg-\[\#0d0d0d\] {
+    background-color: var(--theme-bg-card) !important;
+}
+
+[data-theme='light'] .bg-\[\#faf7f2\] {
+    background-color: var(--theme-bg-section-cream) !important;
+}
+
+[data-theme='light'] .bg-\[\#f4ede0\] {
+    background-color: var(--theme-bg-section-cream-2) !important;
+}
+
+[data-theme='light'] .bg-white {
+    background-color: var(--theme-bg-card) !important;
+}
+
+[data-theme='light'] .shadow-sm {
+    box-shadow: inset 0 0 0 1px rgba(201, 160, 80, 0.12) !important;
+}
+
+[data-theme='light'] .hover\:shadow-xl:hover {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme='light'] .text-white {
+    color: var(--theme-text-primary) !important;
+}
+
+[data-theme='light'] .text-gray-900 {
+    color: var(--theme-text-primary) !important;
+}
+
+[data-theme='light'] .text-gray-400 {
+    color: var(--theme-text-dim) !important;
+}
+
+[data-theme='light'] .text-gray-500 {
+    color: var(--theme-text-secondary) !important;
+}
+
+/* Opacity-based text (text-white/XX) — override with dark equivalents */
+[data-theme='light'] .text-white\/50 {
+    color: var(--theme-text-secondary) !important;
+}
+
+[data-theme='light'] .text-white\/25 {
+    color: var(--theme-text-muted) !important;
+}
+
+[data-theme='light'] .text-white\/35 {
+    color: var(--theme-text-dim) !important;
+}
+
+[data-theme='light'] .text-white\/18 {
+    color: rgba(17, 17, 17, 0.18) !important;
+}
+
+[data-theme='light'] .text-white\/40 {
+    color: var(--theme-text-dim) !important;
+}
+
+/* Light theme: input borders */
+[data-theme='light'] .border-\[\#2a2a2a\] {
+    border-color: var(--theme-border-input) !important;
+}
+
+[data-theme='light'] input[type='text'],
+[data-theme='light'] input[type='email'],
+[data-theme='light'] input[type='tel'],
+[data-theme='light'] textarea {
+    color: var(--theme-text-input) !important;
+}
+
+[data-theme='light'] input::placeholder,
+[data-theme='light'] textarea::placeholder {
+    color: var(--theme-placeholder) !important;
+}
+
+/* Light theme: select options — default bg is white, text is dark */
+[data-theme='light'] option {
+    background-color: var(--theme-bg-card) !important;
+    color: var(--theme-text-primary) !important;
+}
+
+/* Light theme: section with bg-[#faf7f2] (featured projects) */
+[data-theme='light'] section.bg-\[\#faf7f2\] {
+    background-color: var(--theme-bg-card) !important;
+}
+
+/* Light theme: dark sections with bg-[#0a0a0a] */
+[data-theme='light'] .cinematic-gradient {
+    background: linear-gradient(to top, var(--theme-bg-primary), rgba(250, 247, 242, 0.15), transparent) !important;
+}
+
+/* Light theme: search bar at bottom of hero */
+[data-theme='light'] .bg-\[\#0a0a0a\]\/90 {
+    background-color: rgba(250, 247, 242, 0.92) !important;
+}
+
+/* Light theme: border-[#c9a050]/10 */
+[data-theme='light'] .border-\[\#c9a050\]\/10 {
+    border-color: rgba(201, 160, 80, 0.15) !important;
+}
+
+/* Light theme: border-[#c9a050]/8 */
+[data-theme='light'] .border-\[\#c9a050\]\/8 {
+    border-color: rgba(201, 160, 80, 0.12) !important;
+}
+
+/* Light theme: border-white\/5 */
+[data-theme='light'] .border-white\/5 {
+    border-color: rgba(17, 17, 17, 0.08) !important;
+}
+
+/* Light theme: from-[#0a0a0a]\/60 in gradients */
+[data-theme='light'] .from-\[\#0a0a0a\]\/60 {
+    --tw-gradient-from: rgba(250, 247, 242, 0.6) var(--tw-gradient-from-position) !important;
+}
+
+/* Light theme: from-[#0a0a0a]\/75 in card hover overlays */
+[data-theme='light'] .from-\[\#0a0a0a\]\/75 {
+    --tw-gradient-from: rgba(250, 247, 242, 0.75) var(--tw-gradient-from-position) !important;
+}
+
+/* Light theme: via-[#0a0a0a]\/30 in hero gradient */
+[data-theme='light'] .via-\[\#0a0a0a\]\/30 {
+    --tw-gradient-via: rgba(250, 247, 242, 0.3) var(--tw-gradient-via-position) !important;
+}
+
+/* Light theme: via-[#0a0a0a]\/15 in hero gradient */
+[data-theme='light'] .via-\[\#0a0a0a\]\/15 {
+    --tw-gradient-via: rgba(250, 247, 242, 0.15) var(--tw-gradient-via-position) !important;
+}
+
+/* Light theme: black/40 backdrop for badges */
+[data-theme='light'] .bg-black\/40 {
+    background-color: rgba(17, 17, 17, 0.1) !important;
+}
+
+/* Light theme: select option backgrounds */
+[data-theme='light'] select option {
+    background-color: var(--theme-bg-card) !important;
+    color: var(--theme-text-primary) !important;
+}
+
+/* Light theme: card border reveal */
+[data-theme='light'] .border-\[\#c9a050\]\/8 {
+    border-color: rgba(201, 160, 80, 0.12) !important;
+}
+
+/* Light theme: stats bar border */
+[data-theme='light'] .border-\[\#c9a050\]\/15 {
+    border-color: rgba(201, 160, 80, 0.2) !important;
+}
+
+/* Light theme: section top border with gold */
+[data-theme='light'] .border-\[\#c9a050\]\/30 {
+    border-color: rgba(201, 160, 80, 0.3) !important;
+}
+
+/* Light theme: contact section top border */
+[data-theme='light'] .border-\[\#c9a050\]\/30 {
+    border-color: rgba(201, 160, 80, 0.3) !important;
+}
+
+/* Light theme: footer top border */
+[data-theme='light'] .to-\[\#c9a050\]\/15 {
+    --tw-gradient-to: rgba(201, 160, 80, 0.15) var(--tw-gradient-to-position) !important;
+}
+
+/* Light theme: section label divider colors */
+[data-theme='light'] .bg-\[\#c9a050\]\/30 {
+    background-color: rgba(201, 160, 80, 0.3) !important;
+}
+
+/* Light theme: card hover tint background */
+[data-theme='light'] .group-hover\:bg-\[\#fdf9f4\]:hover {
+    background-color: var(--theme-bg-section-cream) !important;
+}
+
+/* Light theme: Show page bg-[#0d0d0d] for form cards */
+[data-theme='light'] .ShowFormCard {
+    background-color: var(--theme-bg-card) !important;
+}
+
+/* Light theme: range slider override */
+[data-theme='light'] input[type='range'] {
+    background: #e8dcc8 !important;
+}
+
+/* Light theme: scrollbar */
+[data-theme='light'] ::-webkit-scrollbar-track {
+    background: #f4ede0 !important;
+}
+
+[data-theme='light'] ::-webkit-scrollbar-thumb {
+    background: #c9a050 !important;
+}
+
+/* Light theme: floating CTA adjustment */
+[data-theme='light'] .floating-cta {
+    box-shadow: 0 10px 40px rgba(201, 160, 80, 0.25) !important;
+}
+
+/* Light theme: pulse shadow */
+[data-theme='light'] .pulse-shadow {
+    animation: none !important;
 }
