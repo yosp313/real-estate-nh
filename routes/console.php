@@ -13,4 +13,4 @@ Artisan::command('reservations:send-daily-report', function (): void {
     app(DailyReservationsReportService::class)->send();
 })->purpose('Send yesterday reservations CSV to admins');
 
-Schedule::command('reservations:send-daily-report')->dailyAt('10:00');
+Schedule::command('reservations:send-daily-report')->dailyAt('09:00');

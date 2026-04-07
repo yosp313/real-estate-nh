@@ -78,13 +78,13 @@ class DailyReservationsReportCommandTest extends TestCase
         Carbon::setTestNow();
     }
 
-    public function test_daily_report_command_is_scheduled_for_10_am(): void
+    public function test_daily_report_command_is_scheduled_for_9_am(): void
     {
         $events = app(Schedule::class)->events();
 
         $this->assertTrue(collect($events)->contains(function (object $event): bool {
             return str_contains($event->command, 'reservations:send-daily-report')
-                && $event->expression === '0 10 * * *';
+                && $event->expression === '0 9 * * *';
         }));
     }
 
