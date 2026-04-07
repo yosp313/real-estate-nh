@@ -107,12 +107,9 @@ export default function Listing({ projects, propertyTypes, filters }: Props) {
                 <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
                 {/* ─── Page Title + Search Filter Bar ─── */}
-                <section className="pt-32 pb-16 bg-[#0a0a0a]">
+                <section className="bg-[#0a0a0a] pt-32 pb-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                        <h1
-                            className="animate-on-scroll mb-10 font-serif font-bold text-white"
-                            style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}
-                        >
+                        <h1 className="animate-on-scroll mb-10 font-serif font-bold text-white" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
                             {t.our_properties}
                         </h1>
 
@@ -126,7 +123,9 @@ export default function Listing({ projects, propertyTypes, filters }: Props) {
                                 </div>
                                 <div className="grid grid-cols-1 items-end gap-5 md:grid-cols-3">
                                     <div>
-                                        <label className="mb-2 block text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">{t.type}</label>
+                                        <label className="mb-2 block text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">
+                                            {t.type}
+                                        </label>
                                         <select
                                             value={selectedType}
                                             onChange={(e) => setSelectedType(e.target.value)}
@@ -179,8 +178,8 @@ export default function Listing({ projects, propertyTypes, filters }: Props) {
                 <section className="geo-pattern bg-[#f4ede0] py-28">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         {projects.length === 0 ? (
-                            <div className="text-center py-20">
-                                <p className="text-white/50 text-lg">No projects match your filters.</p>
+                            <div className="py-20 text-center">
+                                <p className="text-lg text-white/50">No projects match your filters.</p>
                             </div>
                         ) : (
                             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
