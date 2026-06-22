@@ -46,7 +46,7 @@ class ProjectService
                 'image_url',
             ])->toArray(),
             'allProjects' => Project::all(['id', 'slug', 'name'])->toArray(),
-            'propertyTypes' => PropertyType::options(),
+            'propertyTypes' => array_keys(PropertyType::options()),
             'existingTypes' => Project::distinct()->pluck('type')->filter()->values()->all(),
             'filters' => [
                 'type' => $type,

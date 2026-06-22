@@ -25,7 +25,7 @@ enum PropertyType: string
         };
     }
 
- public static function options(): array
+    public static function options(): array
     {
         return collect(self::cases())
             ->mapWithKeys(fn ($type) => [$type->value => $type->label()])

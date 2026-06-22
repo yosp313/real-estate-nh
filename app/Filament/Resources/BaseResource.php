@@ -9,7 +9,6 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
 use UnitEnum;
 
 abstract class BaseResource extends Resource
@@ -27,8 +26,11 @@ abstract class BaseResource extends Resource
     }
 
     abstract protected static function getListPage(): string;
+
     abstract protected static function getCreatePage(): string;
+
     abstract protected static function getViewPage(): string;
+
     abstract protected static function getEditPage(): string;
 
     protected static function getDefaultTableActions(): array

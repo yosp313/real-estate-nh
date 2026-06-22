@@ -124,6 +124,11 @@ export default function Show({ project, relatedProjects }: Props) {
             />
 
             <div className={`grain-overlay min-h-screen bg-[#0a0a0a] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                {/* Skip to content - Accessibility */}
+                <a href="#main-content" className="skip-link">
+                    {t.skip_to_content || 'Skip to content'}
+                </a>
+
                 {/* ─── Navigation ─── */}
                 <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
@@ -146,7 +151,7 @@ export default function Show({ project, relatedProjects }: Props) {
                 </section>
 
                 {/* ─── Main Content ─── */}
-                <main className="relative py-16">
+                <main id="main-content" className="relative py-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <div className="grid gap-16 lg:grid-cols-5">
                             {/* Left: Project Details */}
@@ -343,12 +348,12 @@ export default function Show({ project, relatedProjects }: Props) {
                                     <div className="h-px flex-1 bg-gradient-to-l from-[#c9a050]/15 to-transparent" />
                                 </div>
 
-                                <div className="flex gap-6 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
+                                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     {relatedProjects.map((related, i) => (
                                         <Link
                                             key={related.id}
                                             href={`/project/${related.slug}`}
-                                            className="animate-on-scroll group min-w-[260px] cursor-pointer overflow-hidden border border-[#c9a050]/8 bg-[#0d0d0d] transition-all duration-300 hover:border-[#c9a050]/30 md:min-w-0"
+                                            className="animate-on-scroll group flex cursor-pointer flex-col overflow-hidden border border-[#c9a050]/8 bg-[#0d0d0d] transition-all duration-300 hover:border-[#c9a050]/30"
                                             data-delay={i}
                                         >
                                             <div className="relative aspect-[4/3] overflow-hidden">
@@ -359,11 +364,11 @@ export default function Show({ project, relatedProjects }: Props) {
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                                             </div>
-                                            <div className="p-5">
+                                            <div className="flex flex-1 flex-col p-5">
                                                 <h3 className="mb-1 font-serif font-semibold text-white transition-colors duration-150 group-hover:text-[#c9a050]">
                                                     {related.name}
                                                 </h3>
-                                                <p className="text-sm text-[#c9a050]/60">
+                                                <p className="mt-auto text-sm text-[#c9a050]/60">
                                                     {t.from} ${related.price_starts_at}
                                                 </p>
                                             </div>

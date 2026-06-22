@@ -103,11 +103,16 @@ export default function Listing({ projects, propertyTypes, filters }: Props) {
             />
 
             <div className={`grain-overlay min-h-screen [scroll-behavior:smooth] bg-[#0a0a0a] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                {/* Skip to content - Accessibility */}
+                <a href="#main-content" className="skip-link">
+                    {t.skip_to_content || 'Skip to content'}
+                </a>
+
                 {/* ─── Navigation ─── */}
                 <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
                 {/* ─── Page Title + Search Filter Bar ─── */}
-                <section className="bg-[#0a0a0a] pt-32 pb-16">
+                <section id="main-content" className="bg-[#0a0a0a] pt-32 pb-16">
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         <h1 className="animate-on-scroll mb-10 font-serif font-bold text-white" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>
                             {t.our_properties}
@@ -179,7 +184,24 @@ export default function Listing({ projects, propertyTypes, filters }: Props) {
                     <div className="mx-auto max-w-7xl px-6 lg:px-10">
                         {projects.length === 0 ? (
                             <div className="py-20 text-center">
-                                <p className="text-lg text-white/50">No projects match your filters.</p>
+                                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#c9a050]/10">
+                                    <svg
+                                        className="h-10 w-10 text-[#c9a050]/40"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                        />
+                                    </svg>
+                                </div>
+                                <p className="mb-2 text-lg font-medium text-gray-900">{t.no_projects_found || 'No properties match your filters'}</p>
+                                <p className="text-sm text-gray-500">{t.try_different_filters || 'Try adjusting your search criteria'}</p>
                             </div>
                         ) : (
                             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

@@ -1,13 +1,13 @@
 <?php
 
-use App\Services\AdminCsvService;
 use App\Models\User;
 use App\Notifications\DailyReservationsReportNotification;
+use App\Services\AdminCsvService;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schedule;
-use Illuminate\Support\Carbon;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());

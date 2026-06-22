@@ -1,3 +1,4 @@
+import { CookieConsent } from '@/components/CookieConsent';
 import { Navbar } from '@/components/Navbar';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
@@ -144,6 +145,11 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
             />
 
             <div className={`grain-overlay min-h-screen [scroll-behavior:smooth] bg-[#0a0a0a] ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+                {/* Skip to content - Accessibility */}
+                <a href="#main-content" className="skip-link">
+                    {t.skip_to_content || 'Skip to content'}
+                </a>
+
                 {/* ─── Navigation ─── */}
                 <Navbar locale={locale} translations={t} availableLocales={availableLocales} localeNames={localeNames} />
 
@@ -162,8 +168,8 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
                             className="h-full w-full object-cover"
                         />
                         {/* Cinematic gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent cinematic-gradient" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-transparent cinematic-gradient" />
+                        <div className="cinematic-gradient absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
+                        <div className="cinematic-gradient absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-transparent" />
                     </div>
 
                     {/* Corner accents */}
@@ -363,94 +369,117 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
                             {t.our_properties}
                         </h2>
 
-                        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            {projects.map((project, i) => (
-                                <Link
-                                    key={project.id}
-                                    href={`/project/${project.slug}`}
-                                    className="animate-on-scroll group relative flex cursor-pointer flex-col overflow-hidden bg-white shadow-sm transition-all duration-400 hover:shadow-xl"
-                                    data-delay={i % 3}
-                                >
-                                    <div className="relative aspect-[4/3] overflow-hidden">
-                                        <img
-                                            src={project.image_url}
-                                            alt={project.name}
-                                            className="h-full w-full object-cover transition-transform duration-600 group-hover:scale-105"
+                        {projects.length === 0 ? (
+                            <div className="py-20 text-center">
+                                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#c9a050]/10">
+                                    <svg
+                                        className="h-10 w-10 text-[#c9a050]/40"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={1.5}
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                                         />
-                                        <div className="absolute right-4 bottom-4 z-10 bg-[#c9a050] px-4 py-2 text-xs font-bold text-white shadow-lg">
-                                            {t.from} ${project.price_starts_at}
-                                        </div>
-                                        {project.is_featured && (
-                                            <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 text-[9px] font-bold tracking-[0.15em] text-[#c9a050] uppercase shadow-sm">
-                                                {t.featured_property}
+                                    </svg>
+                                </div>
+                                <p className="mb-2 text-lg font-medium text-gray-900">{t.no_projects_found || 'No properties available'}</p>
+                                <p className="text-sm text-gray-500">{t.try_different_filters || 'Try adjusting your filters'}</p>
+                            </div>
+                        ) : (
+                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                                {projects.map((project, i) => (
+                                    <Link
+                                        key={project.id}
+                                        href={`/project/${project.slug}`}
+                                        className={`animate-on-scroll group relative flex cursor-pointer flex-col overflow-hidden bg-white shadow-sm transition-all duration-400 hover:shadow-xl ${i === 0 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                                        data-delay={i % 3}
+                                    >
+                                        <div className={`relative overflow-hidden ${i === 0 ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[4/3]'}`}>
+                                            <img
+                                                src={project.image_url}
+                                                alt={project.name}
+                                                className="h-full w-full object-cover transition-transform duration-600 group-hover:scale-105"
+                                            />
+                                            <div className="absolute right-4 bottom-4 z-10 bg-[#c9a050] px-4 py-2 text-xs font-bold text-white shadow-lg">
+                                                {t.from} ${project.price_starts_at}
                                             </div>
-                                        )}
-                                    </div>
-                                    {/* Gold bottom border reveal */}
-                                    <div className="absolute right-0 bottom-0 left-0 h-[2px] origin-left scale-x-0 bg-[#c9a050] transition-transform duration-400 group-hover:scale-x-100" />
-                                    <div className="flex flex-1 flex-col p-6">
-                                        <h3 className="mb-1.5 font-serif text-lg font-bold text-gray-900 transition-colors duration-150 group-hover:text-[#9a7830]">
-                                            {project.name}
-                                        </h3>
-                                        {project.location && <p className="mb-3 text-xs text-gray-400">{project.location}</p>}
-                                        {(project.bedrooms !== null || project.area_sqm) && (
-                                            <div className="mb-4 flex items-center gap-5 text-sm text-gray-500">
-                                                {project.bedrooms !== null && (
-                                                    <span className="flex items-center gap-1.5">
-                                                        <svg
-                                                            className="h-4 w-4 text-[#c9a050]/60"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={1.5}
-                                                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                                            />
-                                                        </svg>
-                                                        {project.bedrooms} {t.bedrooms}
-                                                    </span>
-                                                )}
-                                                {project.area_sqm && (
-                                                    <span className="flex items-center gap-1.5">
-                                                        <svg
-                                                            className="h-4 w-4 text-[#c9a050]/60"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={1.5}
-                                                                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                                                            />
-                                                        </svg>
-                                                        {project.area_sqm} {t.sqm}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
-                                        <div className="mt-auto flex items-center gap-2 text-[#b8923a]">
-                                            <span className="text-[10px] font-bold tracking-[0.2em] uppercase">{t.read_more}</span>
-                                            <svg
-                                                className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`}
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                aria-hidden="true"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                            </svg>
+                                            {project.is_featured && (
+                                                <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 text-[9px] font-bold tracking-[0.15em] text-[#c9a050] uppercase shadow-sm">
+                                                    {t.featured_property}
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                                        {/* Gold bottom border reveal */}
+                                        <div className="absolute right-0 bottom-0 left-0 h-[2px] origin-left scale-x-0 bg-[#c9a050] transition-transform duration-400 group-hover:scale-x-100" />
+                                        <div className="flex flex-1 flex-col p-6">
+                                            <h3 className="mb-1.5 font-serif text-lg font-bold text-gray-900 transition-colors duration-150 group-hover:text-[#9a7830]">
+                                                {project.name}
+                                            </h3>
+                                            {project.location && <p className="mb-3 text-xs text-gray-400">{project.location}</p>}
+                                            {(project.bedrooms !== null || project.area_sqm) && (
+                                                <div className="mb-4 flex items-center gap-5 text-sm text-gray-500">
+                                                    {project.bedrooms !== null && (
+                                                        <span className="flex items-center gap-1.5">
+                                                            <svg
+                                                                className="h-4 w-4 text-[#c9a050]/60"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={1.5}
+                                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                                                />
+                                                            </svg>
+                                                            {project.bedrooms} {t.bedrooms}
+                                                        </span>
+                                                    )}
+                                                    {project.area_sqm && (
+                                                        <span className="flex items-center gap-1.5">
+                                                            <svg
+                                                                className="h-4 w-4 text-[#c9a050]/60"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={1.5}
+                                                                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                                                                />
+                                                            </svg>
+                                                            {project.area_sqm} {t.sqm}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+                                            <div className="mt-auto flex items-center gap-2 text-[#b8923a]">
+                                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase">{t.read_more}</span>
+                                                <svg
+                                                    className={`h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`}
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </section>
 
@@ -739,6 +768,15 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
                         </div>
 
                         <div className="border-t border-white/5 pt-8 text-center text-xs tracking-widest text-white/18">
+                            <div className="mb-4 flex items-center justify-center gap-6">
+                                <a href="/privacy" className="text-white/25 transition-colors duration-200 hover:text-[#c9a050]">
+                                    {t.privacy_policy || 'Privacy Policy'}
+                                </a>
+                                <span className="text-white/10">|</span>
+                                <a href="/terms" className="text-white/25 transition-colors duration-200 hover:text-[#c9a050]">
+                                    {t.terms_of_service || 'Terms of Service'}
+                                </a>
+                            </div>
                             <p>
                                 {t.copyright?.replace(':year', new Date().getFullYear().toString()) ||
                                     `\u00A9 ${new Date().getFullYear()} Al-Nader. All rights reserved.`}
@@ -751,6 +789,9 @@ export default function Index({ projects, propertyTypes, filters }: Props) {
                 <a href="#contact" className="floating-cta pulse-shadow">
                     {t.reserve_unit}
                 </a>
+
+                {/* ─── Cookie Consent ─── */}
+                <CookieConsent />
             </div>
         </>
     );

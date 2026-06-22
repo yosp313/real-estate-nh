@@ -1,5 +1,5 @@
 import { useTheme } from '@/hooks/useTheme';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 interface NavbarProps {
     locale: string;
@@ -10,8 +10,17 @@ interface NavbarProps {
 
 export function Navbar({ locale, translations: t, availableLocales, localeNames }: NavbarProps) {
     const { theme, toggleTheme } = useTheme();
-    const navItemClass =
-        'hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] text-white/80 uppercase transition-colors duration-200 hover:text-[#c9a050]';
+    const { url } = usePage();
+
+    const isActive = (href: string) => {
+        if (href === '/') return url === '/';
+        return url.startsWith(href);
+    };
+
+    const navItemClass = (href: string) =>
+        `hover-gold-underline cursor-pointer text-xs font-semibold tracking-[0.2em] uppercase transition-colors duration-200 ${
+            isActive(href) ? 'text-[#c9a050]' : 'text-white/80 hover:text-[#c9a050]'
+        }`;
 
     return (
         <nav className="navbar-floating">
@@ -31,19 +40,11 @@ export function Navbar({ locale, translations: t, availableLocales, localeNames 
                             { href: '#contact', label: t.contact },
                         ].map((item) =>
                             item.href.startsWith('/') ? (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={navItemClass}
-                                >
+                                <Link key={item.href} href={item.href} className={navItemClass(item.href)}>
                                     {item.label}
                                 </Link>
                             ) : (
-                                <a
-                                    key={item.href}
-                                    href={item.href}
-                                    className={navItemClass}
-                                >
+                                <a key={item.href} href={item.href} className={navItemClass(item.href)}>
                                     {item.label}
                                 </a>
                             ),
