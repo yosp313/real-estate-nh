@@ -15,12 +15,19 @@ class AdminMetricsService
      */
     public function getStats(): array
     {
+        $projectsAgg = Project::query()
+            ->selectRaw('COUNT(*) as total, SUM(is_featured) as featured, SUM(status = "sold") as sold')
+            ->first();
+
+        $reservationsCount = Reservation::count();
+        $unreadMessages = Contact::where('is_read', false)->count();
+
         return [
-            'total_projects' => Project::count(),
-            'featured_projects' => Project::where('is_featured', true)->count(),
-            'sold_projects' => Project::where('status', 'sold')->count(),
-            'total_reservations' => Reservation::count(),
-            'unread_messages' => Contact::where('is_read', false)->count(),
+            'total_projects' => (int) $projectsAgg->total,
+            'featured_projects' => (int) $projectsAgg->featured,
+            'sold_projects' => (int) $projectsAgg->sold,
+            'total_reservations' => $reservationsCount,
+            'unread_messages' => $unreadMessages,
             'projects_chart' => $this->getDailyCounts(Project::class),
             'reservations_chart' => $this->getDailyCounts(Reservation::class),
             'contacts_chart' => $this->getDailyCounts(Contact::class),

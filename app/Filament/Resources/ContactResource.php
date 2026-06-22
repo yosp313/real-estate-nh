@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactResource\Pages;
 use App\Models\Contact;
+use App\Filament\Resources\BaseResource;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -12,7 +13,6 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -22,7 +22,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
 use UnitEnum;
 
-class ContactResource extends Resource
+class ContactResource extends BaseResource
 {
     protected static ?string $model = Contact::class;
 
@@ -78,7 +78,7 @@ class ContactResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+        return static::getDefaultTable($table)
             ->columns([
                 IconColumn::make('is_read')->label('')->boolean()
                     ->trueIcon('heroicon-o-envelope-open')->falseIcon('heroicon-o-envelope')
@@ -105,8 +105,32 @@ class ContactResource extends Resource
                         ->action(fn (Collection $records) => $records->each->update(['is_read' => false])),
                     DeleteBulkAction::make(),
                 ]),
-            ])
-            ->defaultSort('created_at', 'desc');
+            ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    protected static function getListPage(): string
+    {
+        return Pages\ListContacts::class;
+    }
+
+    protected static function getCreatePage(): string
+    {
+        return '';
+    }
+
+    protected static function getViewPage(): string
+    {
+        return Pages\ViewContact::class;
+    }
+
+    protected static function getEditPage(): string
+    {
+        return '';
     }
 
     public static function getPages(): array
@@ -115,10 +139,5 @@ class ContactResource extends Resource
             'index' => Pages\ListContacts::route('/'),
             'view' => Pages\ViewContact::route('/{record}'),
         ];
-    }
-
-    public static function canCreate(): bool
-    {
-        return false;
     }
 }

@@ -23,8 +23,8 @@ class DailyReservationsReportNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Daily reservations report')
-            ->line('Attached is the reservations CSV report for yesterday.')
+            ->subject(__('messages.daily_report_subject'))
+            ->line(__('messages.daily_report_line'))
             ->attachData($this->csvContent, $this->csvFilename, ['mime' => 'text/csv']);
     }
 }

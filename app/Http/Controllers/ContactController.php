@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ContactService;
+use App\Models\Contact;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function __construct(private ContactService $contactService) {}
-
     /**
      * Store a new contact inquiry.
      */
@@ -27,7 +25,7 @@ class ContactController extends Controller
             'message.required' => __('messages.message_required'),
         ]);
 
-        $this->contactService->createContact($validated);
+        Contact::create(array_merge(['is_read' => false], $validated));
 
         return back()->with('success', __('messages.contact_success'));
     }

@@ -139,6 +139,7 @@ return [
     'registration_success' => 'تم التسجيل بنجاح! سنتواصل معك قريباً.',
     'already_registered' => 'أنت مسجل بالفعل في هذا المشروع.',
     'project_unavailable' => 'هذا المشروع غير متاح حالياً للحجز.',
+    'reservation_unavailable' => 'هذا المشروع غير متاح حالياً للحجز.',
     'reservation_status_submitted' => 'تم الاستلام',
     'reservation_status_pending' => 'قيد المراجعة',
     'reservation_status_accepted' => 'تم القبول',
@@ -167,4 +168,8 @@ return [
     // Copyright
     'copyright' => '© :year جميع حقوق الطبع والنشر محفوظة لمجموعة النادر',
     'developed_by' => 'طور بواسطة',
+
+    // Daily Report
+    'daily_report_subject' => 'تقرير الحجوزات اليومي',
+    'daily_report_line' => 'مرفق تقرير CSV بالحجوزات ليوم أمس.',
 ];

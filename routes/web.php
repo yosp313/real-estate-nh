@@ -1,13 +1,21 @@
 <?php
 
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReservationController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 // Language Switching
-Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
+Route::get('/locale/{locale}', function (string $locale) {
+    if (in_array($locale, config('app.available_locales', ['en']), true)) {
+        Session::put('locale', $locale);
+        App::setLocale($locale);
+    }
+
+    return redirect()->back();
+})->name('locale.set');
 
 // The Home Page (Gallery)
 Route::get('/', [ProjectController::class, 'index'])->name('home');

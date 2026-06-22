@@ -11,7 +11,6 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -19,7 +18,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use UnitEnum;
 
-class ReservationResource extends Resource
+class ReservationResource extends BaseResource
 {
     protected static ?string $model = Reservation::class;
 
@@ -75,7 +74,7 @@ class ReservationResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+        return static::getDefaultTable($table)
             ->columns([
                 TextColumn::make('project.name')->label(__('Project'))->searchable()->sortable()->badge(),
                 TextColumn::make('customer_name')->label(__('Name'))->searchable()->sortable(),
@@ -93,19 +92,26 @@ class ReservationResource extends Resource
                     'accepted' => __('messages.reservation_status_accepted'),
                     'rejected' => __('messages.reservation_status_rejected'),
                 ]),
-            ])
-            ->recordActions([ViewAction::make(), EditAction::make(), DeleteAction::make()])
-            ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])])
-            ->defaultSort('created_at', 'desc');
+            ]);
     }
 
-    public static function getPages(): array
+    protected static function getListPage(): string
     {
-        return [
-            'index' => Pages\ListReservations::route('/'),
-            'create' => Pages\CreateReservation::route('/create'),
-            'view' => Pages\ViewReservation::route('/{record}'),
-            'edit' => Pages\EditReservation::route('/{record}/edit'),
-        ];
+        return Pages\ListReservations::class;
+    }
+
+    protected static function getCreatePage(): string
+    {
+        return Pages\CreateReservation::class;
+    }
+
+    protected static function getViewPage(): string
+    {
+        return Pages\ViewReservation::class;
+    }
+
+    protected static function getEditPage(): string
+    {
+        return Pages\EditReservation::class;
     }
 }

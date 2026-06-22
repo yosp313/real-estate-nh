@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Models\Project;
 use App\Models\Reservation;
-use App\Services\Exceptions\DuplicateReservationException;
-use App\Services\Exceptions\ReservationUnavailableException;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Validation\ValidationException;
 
 class ReservationService
 {
@@ -16,7 +15,9 @@ class ReservationService
     public function createReservation(Project $project, array $data): Reservation
     {
         if (! $project->isAvailable()) {
-            throw new ReservationUnavailableException;
+            throw ValidationException::withMessages([
+                'project' => __('messages.reservation_unavailable'),
+            ]);
         }
 
         try {
@@ -27,7 +28,9 @@ class ReservationService
                 'status' => 'pending',
             ]);
         } catch (UniqueConstraintViolationException $exception) {
-            throw new DuplicateReservationException(previous: $exception);
+            throw ValidationException::withMessages([
+                'email' => __('messages.already_registered'),
+            ]);
         }
     }
 }

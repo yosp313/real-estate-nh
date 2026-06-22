@@ -139,6 +139,7 @@ return [
     'registration_success' => 'Registration successful! We will contact you shortly.',
     'already_registered' => 'You are already registered for this project.',
     'project_unavailable' => 'This project is currently unavailable for reservations.',
+    'reservation_unavailable' => 'This project is currently unavailable for reservations.',
     'reservation_status_submitted' => 'Submitted',
     'reservation_status_pending' => 'Pending',
     'reservation_status_accepted' => 'Accepted',
@@ -167,4 +168,8 @@ return [
     // Copyright
     'copyright' => '© :year All rights reserved to Al-Nader Group',
     'developed_by' => 'Developed by',
+
+    // Daily Report
+    'daily_report_subject' => 'Daily reservations report',
+    'daily_report_line' => 'Attached is the reservations CSV report for yesterday.',
 ];

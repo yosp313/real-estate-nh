@@ -2,23 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\PropertyType;
 use App\Models\Project;
 
 class ProjectService
 {
-    /**
-     * @var array<int, string>
-     */
-    private array $propertyTypes = [
-        'apartment',
-        'villa',
-        'townhouse',
-        'duplex',
-        'penthouse',
-        'studio',
-        'commercial',
-    ];
-
     /**
      * @param  array<string, mixed>  $filters
      * @return array<string, mixed>
@@ -58,7 +46,7 @@ class ProjectService
                 'image_url',
             ])->toArray(),
             'allProjects' => Project::all(['id', 'slug', 'name'])->toArray(),
-            'propertyTypes' => $this->propertyTypes,
+            'propertyTypes' => PropertyType::options(),
             'existingTypes' => Project::distinct()->pluck('type')->filter()->values()->all(),
             'filters' => [
                 'type' => $type,
@@ -88,7 +76,7 @@ class ProjectService
             return null;
         }
 
-        return in_array($type, $this->propertyTypes, true) ? $type : null;
+        return PropertyType::tryFrom($type)?->value;
     }
 
     private function normalizeMinArea(mixed $minArea): ?int

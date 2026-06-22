@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PropertyType;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
+use App\Filament\Resources\BaseResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -25,7 +27,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use UnitEnum;
 
-class ProjectResource extends Resource
+class ProjectResource extends BaseResource
 {
     protected static ?string $model = Project::class;
 
@@ -59,10 +61,7 @@ class ProjectResource extends Resource
                 TextInput::make('name')->label(__('Project Name'))->required()->maxLength(255)
                     ->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
                 TextInput::make('slug')->label(__('Slug'))->required()->maxLength(255)->unique(ignoreRecord: true),
-                Select::make('type')->label(__('Property Type'))->options([
-                    'apartment' => 'Apartment', 'villa' => 'Villa', 'townhouse' => 'Townhouse',
-                    'duplex' => 'Duplex', 'penthouse' => 'Penthouse', 'studio' => 'Studio', 'commercial' => 'Commercial',
-                ])->required()->searchable(),
+                Select::make('type')->label(__('Property Type'))->options(PropertyType::options())->required()->searchable(),
                 TextInput::make('location')->label(__('Location'))->required()->maxLength(255),
             ])->columns(2),
             Section::make(__('Property Details'))->schema([
@@ -87,7 +86,7 @@ class ProjectResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+        return static::getDefaultTable($table)
             ->columns([
                 TextColumn::make('name')->label(__('Name'))->searchable()->sortable(),
                 TextColumn::make('type')->label(__('Type'))->badge()->searchable()->sortable(),
@@ -98,24 +97,13 @@ class ProjectResource extends Resource
                 TextColumn::make('created_at')->label(__('Created'))->dateTime('M j, Y')->sortable(),
             ])
             ->filters([
-                SelectFilter::make('type')->options([
-                    'apartment' => 'Apartment',
-                    'villa' => 'Villa',
-                    'townhouse' => 'Townhouse',
-                    'duplex' => 'Duplex',
-                    'penthouse' => 'Penthouse',
-                    'studio' => 'Studio',
-                    'commercial' => 'Commercial',
-                ]),
+                SelectFilter::make('type')->options(PropertyType::options()),
                 TernaryFilter::make('is_featured')->label(__('Featured')),
                 SelectFilter::make('status')->options([
                     'available' => __('Available'),
                     'sold' => __('Sold'),
                 ]),
-            ])
-            ->recordActions([ViewAction::make(), EditAction::make(), DeleteAction::make()])
-            ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])])
-            ->defaultSort('created_at', 'desc');
+            ]);
     }
 
     public static function getRelations(): array
@@ -123,13 +111,23 @@ class ProjectResource extends Resource
         return [RelationManagers\ReservationsRelationManager::class];
     }
 
-    public static function getPages(): array
+    protected static function getListPage(): string
     {
-        return [
-            'index' => Pages\ListProjects::route('/'),
-            'create' => Pages\CreateProject::route('/create'),
-            'view' => Pages\ViewProject::route('/{record}'),
-            'edit' => Pages\EditProject::route('/{record}/edit'),
-        ];
+        return Pages\ListProjects::class;
+    }
+
+    protected static function getCreatePage(): string
+    {
+        return Pages\CreateProject::class;
+    }
+
+    protected static function getViewPage(): string
+    {
+        return Pages\ViewProject::class;
+    }
+
+    protected static function getEditPage(): string
+    {
+        return Pages\EditProject::class;
     }
 }
